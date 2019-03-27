@@ -12,7 +12,7 @@
 
 #The program receives 7 parameters
 #1 - Mapping quality
-#2 - ComCIGAR ou SemCIGAR
+#2 - YesCIGAR ou NotCIGAR
 #3 - Bases quality
 #4 - Percentage of covered bases
 #5 - Coverage of regions in alleged father and mother
@@ -35,14 +35,14 @@ my $BAM_P;
 my $BAM_M;
 my $cobPL = 1000;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $qual = 20;
 my $por = 70;
 my $cob = 20;
 my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
-my $Genome = "TODOS";
+my $Genome = "ALL";
 
 GetOptions("help|h" => \$help,
 	   "X=s" => \$BAM_SP,
@@ -72,12 +72,12 @@ Parameters:\
     -M : MOTHER bam file\
     -P : PLASMA bam file\
     -m : Mapping quality of reads (default = 20)\
-    -l : Uses or not the CIGAR info. If NOT (SemCIGAR), consider only (mis)matches. Other option is ComCIGAR (default = SemCIGAR)
+    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR)
     -q : Bases quality (default = 20)\
     -p : Percentage of coveraged bases (default = 70)\
     -c : Coveraged reads of ALLEGED FATHER and MOTHER (default = 20)\
     -f : Coveraged reads of PLASMA (default = 1000)\
-    -g : Population of 1000 Genomes (default = TODOS)\
+    -g : Population of 1000 Genomes (default = ALL)\
     -e : Limit for sequencing errors (default = 10)\
     -s : Limit to consider HOMOZYGOUS (default = 80)\
     -d : Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
@@ -87,13 +87,13 @@ Parameters:\
 ####################################################################################
 
 #Analysis of ALLEGED FATHER
-system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a SP -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analize_sample.pl -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a SP -e $erros -s $superior -d $duvida");
 
 #Analysis of MOTHER
-system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_M -m $map -l $cigar -q $qual -p $por -c $cob -a M -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analize_sample.pl -b $BAM_M -m $map -l $cigar -q $qual -p $por -c $cob -a M -e $erros -s $superior -d $duvida");
 
 #Analysis of PLASMA
-system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analize_sample.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
 
 #PROBABILITY OF PATERNITY calculation
 system("Scripts_PaternityCalc/b_calcula_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
