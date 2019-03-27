@@ -1,17 +1,13 @@
 #!/usr/bin/perl -w
 
-#Autora : Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA SEPARAR OS READS QUE COBREM TODOS OS SNPS COM CIGAR
+#SCRIPT TO SEPARATE READS THAT COVER ALL THE SNPS CONSIDERING THE CIGAR
 
-#Devem ser passados 2 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do MAPEAMENTO
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
-#Arquivo BED: /home/jaque/Desktop/Scripts_Martin/Arquivos/SNPs.bed
+#The script receives 2 parameters
+#1 - Bam file
+#2 - Mapping quality
 
 ####################################################################################
 
@@ -28,15 +24,14 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe uma entrada, o arquivo BAM. A saída são dois arquivos: \
-TODOS_SNPS - contém os redas que possuem TODOS os SNPs cobertos. \
-PARTE_SNPS - contém os reads que possuem PARTE dos SNPs cobertos. \
+This script receives one input, the bam file. The outputs are two files. \
+TODOS_SNPS - contain reads with ALL the SNPs covered. \
+PARTE_SNPS - contain reads with PART of the SNPs covered. \
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Bam file\
+    -m : Mapping quality of reads (default = 20)\
 \n";
 }
 
@@ -51,7 +46,7 @@ my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
     chomp ($pos);
@@ -63,7 +58,7 @@ while (my $pos = <POS>) {
     my $fim = $3;
 
     #Abrimos o arquivo com as posições dos SNPs
-    open (BED, "/home/jaque/Desktop/Scripts_Martin/Arquivos/SNPs.bed") or die "Não abriu o BED! \n";
+    open (BED, "Files/SNPs.bed") or die "Failed to open BED file! \n";
 
     my @SNP_pos;
     my @SNP_id;
@@ -85,7 +80,7 @@ while (my $pos = <POS>) {
     close (BED);
 
     #Abrimos o arquivo com BOM mapeamento
-    open (INFILE, "$nome.BOM_MAP.M$map/$nome.$chr.$ini-$fim.BOM_MAP.M$map.tsv") or die "Não foi possível abrir o arquivo com os BOMs MAPEAMENTOS! \n";
+    open (INFILE, "$nome.BOM_MAP.M$map/$nome.$chr.$ini-$fim.BOM_MAP.M$map.tsv") or die "Failed to open BOM_MAP file! \n";
 
     my @haplo_bom;
     my @haplo_ruim;
@@ -233,7 +228,7 @@ while (my $pos = <POS>) {
     close (INFILE);
 
     #Arquivo de reads com TODOS os SNPs cobertos
-    open (OUTBOM, ">$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.ComCIGAR.tsv") or die "Não abriu o arquivo com todos os SNPs! \n";
+    open (OUTBOM, ">$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.YesCIGAR.tsv") or die "Failed to open TODOS_SNPS file! \n";
 
     foreach my $g_string(@haplo_bom) {
 	print OUTBOM $g_string, "\n";
@@ -243,7 +238,7 @@ while (my $pos = <POS>) {
     close (OUTBOM);
 
     #Arquivo de reads com PARTE dos SNPs cobertos
-    open (OUTRUIM, ">$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.ComCIGAR.tsv") or die "Não abriu o arquivo com parte dos SNPs! \n";
+    open (OUTRUIM, ">$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.YesCIGAR.tsv") or die "Failed to open PARTE_SNPS file! \n";
 
     foreach my $b_string(@haplo_ruim) {
 
@@ -256,6 +251,6 @@ while (my $pos = <POS>) {
 } #while (my $pos = <POS>)
 
 close (POS);
-system ("mkdir $nome.PARTE_SNPS.M$map.ComCIGAR $nome.TODOS_SNPS.M$map.ComCIGAR");
-system ("mv $nome.*.PARTE_SNPS.M$map.ComCIGAR.tsv $nome.PARTE_SNPS.M$map.ComCIGAR");
-system ("mv $nome.*.TODOS_SNPS.M$map.ComCIGAR.tsv $nome.TODOS_SNPS.M$map.ComCIGAR");
+system ("mkdir $nome.PARTE_SNPS.M$map.YesCIGAR $nome.TODOS_SNPS.M$map.YesCIGAR");
+system ("mv $nome.*.PARTE_SNPS.M$map.YesCIGAR.tsv $nome.PARTE_SNPS.M$map.YesCIGAR");
+system ("mv $nome.*.TODOS_SNPS.M$map.YesCIGAR.tsv $nome.TODOS_SNPS.M$map.YesCIGAR");
