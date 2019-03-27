@@ -1,16 +1,14 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA SEPARAR READS QUE TENHAM UM BOM ALINHAMENTO.
+#SCRIPT TO SEPARATE READ WITH A GOOD ALIGNMENT 
 
-#Deve ser passado 1 parâmetro:
-#1 - Arquivo BAM
+#The program receives 1 parmeter:
+#1 - Bam file
 
-#Endereços importantes (MARTIN)
 #Samtools: /home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
 
 ####################################################################################
 
@@ -25,14 +23,13 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe uma entrada, o arquivo BAM. A saída são dois arquivos com as sequências no formato BAM: \
-BOM_ALN - contém reads que estejam alinhados em uma região apenas. \
-MAU_ALN - contém reads que estejam alinhados ema mais de uma região. \
+This script receives the bam file. The outputs are two files with sequences in bam format. \
+BOM_ALN - contain reads aligned only in ONE region. \
+MAU_ALN - contain reads aligned in more than ONE region. \
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Bam file\
 \n";
 }
 
@@ -47,7 +44,7 @@ my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
  
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 #Indexamos o BAM para poder visualizar os dados
 system ("/home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools index $BAM");
@@ -66,13 +63,13 @@ while (my $pos = <POS>){
     system ("/home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools view $BAM $pos > $nome.$chr.$ini-$fim.tsv");
 
     #Abrimos o aquivo TSV e extraímos as informações das regiões analisadas
-    open (TSV, "$nome.$chr.$ini-$fim.tsv") or die "Não foi possível abrir o arquivo TSV! \n";
+    open (TSV, "$nome.$chr.$ini-$fim.tsv") or die "Failed to open TSV file! \n";
 
     #Alinhamentos em uma região
-    open (OUT1, ">$nome.$chr.$ini-$fim.BOM_ALN.tsv") or die "Não foi possível abrir o arquivo OUT1! \n";
+    open (OUT1, ">$nome.$chr.$ini-$fim.BOM_ALN.tsv") or die "Failed to open OUT1 file! \n";
 
     #Alinhamentos em duas ou mais regiões
-    open (OUT2, ">$nome.$chr.$ini-$fim.MAU_ALN.tsv") or die "Não foi possível abrir o arquivo OUT2! \n";
+    open (OUT2, ">$nome.$chr.$ini-$fim.MAU_ALN.tsv") or die "Failed to open OUT2 file! \n";
 
     while (my $line = <TSV>){
 
