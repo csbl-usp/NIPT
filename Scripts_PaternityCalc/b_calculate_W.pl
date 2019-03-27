@@ -133,7 +133,7 @@ while (my $pos = <POS>) {
 ####################################################################################
 
     #Buscamos os haplotipos do pai no arquivo do PAI
-    open (PAI, "Genotypes_SP.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
+    open (PAI, "Genotypes_AF.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
     
     $/ = "\n\n";
 
