@@ -1,27 +1,24 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA CALCULAR A PROBABILIDADE DE PATERNIDADE UTILIZANDO OS ARQUIVOS DO SUPOSTO PAI, DA MÃE E DO PLASMA.
+#SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING THE FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#Devem ser passados 8 parâmetros:
-#1 - Arquivo BAM do Plasma
-#2 - Qualidade do mapeamento
-#3 - ComCIGAR ou SemCIGAR
-#4 - Qualidade das BASES
-#5 - Porcentagem das BASES cobertas
-#6 - Cobertura das regiões do SUPOSTO PAI e da MÃE
-#7 - Cobertura das regiões do PLASMA
-#8 - População do Banco de Dados
+#The script receives 8 parameters
+#1 - Plasma bam file
+#2 - Mapping quality
+#3 - YesCIGAR or NotCIGAR
+#4 - Bases quality
+#5 - Percentage of covered bases
+#6 - Coverage of alleged father and mother regions
+#7 - Coverage of plasma regions
+#8 - Population from 1000 Genomes
 
-#Parâmetros de desbalanço
+#Inbalance parameters
 #1 - Superior
-#2 - Erros
-#3 - Dúvida de três
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
+#2 - Errors
+#3 - Doubt between three
 
 ####################################################################################
 
@@ -32,14 +29,14 @@ my $help = 0;
 my $BAM;
 my $cobPL = 1000;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $qual = 20;
 my $por = 70;
 my $cob = 20;
 my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
-my $Genome = "TODOS";
+my $Genome = "ALL";
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
@@ -56,22 +53,23 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe os parâmetros para análise dos dados e a cobertura mínima do plasma. A saída são os genótipos encontrados para a amostra do SUPOSTO PAI, da MÃE e do PLASMA. Para cada micro-haplótipo é obtida a Evidência da Paternidade, e posteriormente calculado o Índice de Paternidade (IP) e a Probabilidade de Paternidade Posterior (W).\
+This script receives the parameters to analyze the data and the plasma minimum coverage.\
+The outputs are the genotypes for alleged father, mother and plasma.\
+For each microhaplotype, the EV is obtained, then, the PI and W are calculated. \
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM do PLASMA\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
-    -c : Cobertura de reads do SUPOSTO PAI e MÃE (padrão = 20)\
-    -f : Cobertura de reads do PLASMA (padrão = 1000)\
-    -g : Populacão do 1000 Genomes (padrão = TODOS)\
-    -e : Limite para erros de sequenciamento (Padrão = 10)\
-    -s : Limite para considerar HOMOZIGOTO (Padrão = 80)\
-    -d : Limite para considerar HETEROZIGOTO quando existem 3 ou mais (Padrão = 35)\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Plasma bam file\
+    -m : Mapping quality of reads (default = 20)\
+    -l : YesCIGAR or NotCIGAR (default = NotCIGAR)
+    -q : Bases quality (default = 20)\
+    -p : Percentage of covered bases (default = 70)\
+    -c : Coverage of alleged father and mother (padrão = 20)\
+    -f : Coverage of plasma ( = 1000)\
+    -g : Population from 1000 Genomes (default = ALL)\
+    -e : Limit for sequencing errors (default = 10)\
+    -s : Limit to consider HOMOZYGOUS (default = 80)\
+    -d : Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35)\
 \n";
 }
 
@@ -90,7 +88,7 @@ my $tem_mut = 0;
 
 ####################################################################################
 
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotipos.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $M = 1;
 
@@ -110,7 +108,7 @@ while (my $pos = <POS>) {
 
     #Abrimos os arquivos de qualidade dos haplotipos e armazenamos as informacoes de cobertura e porcentagem de cada haplotipo encontrado
     
-    open (INFILE, "$nome/$nome.haplotipos.MAIS_$por.Q$qual.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo com os haplótipos! \n";
+    open (INFILE, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
     
     my %cobertura;
     my %porcentagem;
@@ -135,7 +133,7 @@ while (my $pos = <POS>) {
 ####################################################################################
 
     #Buscamos os haplotipos do pai no arquivo do PAI
-    open (PAI, "Genotipos_SP.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Não foi possível abrir o arquivo de genótipos do PAI!\n";
+    open (PAI, "Genotypes_SP.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
     
     $/ = "\n\n";
 
@@ -167,7 +165,7 @@ while (my $pos = <POS>) {
 ####################################################################################
 
     #Buscamos os haplotipos da mae no arquivo da MAE
-    open (MAE, "Genotipos_M.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Não foi possível abrir o arquivo de genótipos da MAE! \n";
+    open (MAE, "Genotypes_M.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the M GENOTYPES file! \n";
 
     my %haplo_mae;
     
@@ -392,7 +390,7 @@ while (my $pos = <POS>) {
 
 	}
 
-	open (META, "/home/jaque/Desktop/Scripts_Martin/Haplotipos/$meta_file") or die "Não foi possível abrir o meta file! \n";
+	open (META, "Haplotypes/$meta_file") or die "Failed to open meta file! \n";
 
 	my $meta_head = <META>;
 	chomp ($meta_head);
