@@ -74,7 +74,7 @@ Parameters:\
     -m : Mapping quality of reads (default = 20)\
     -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR)
     -q : Bases quality (default = 20)\
-    -p : Percentage of coveraged bases (default = 70)\
+    -p : Percentage of covered bases (default = 70)\
     -c : Coveraged reads of ALLEGED FATHER and MOTHER (default = 20)\
     -f : Coveraged reads of PLASMA (default = 1000)\
     -g : Population of 1000 Genomes (default = ALL)\
