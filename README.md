@@ -1,8 +1,8 @@
 # Non Invasive Prenatal Testing (NIPT)
 
-### Scripts to calculate the Probability of Paternity using NGS sequencing of Mother, Plasma and Alleged Father
+### Scripts to calculate the probability of paternity using NGS data of mother, plasma and alleged father
 
-**1. To calculate the Probability of Paternity**
+**1. To calculate the probability of paternity**
 
   - Go to the directory where the mother, the plasma and the alleged father's BAM files are located.
   
