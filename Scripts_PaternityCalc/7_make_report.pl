@@ -1,26 +1,23 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA EXTRAIR A QUANTIDADE DE READS QUE PASSARAM NOS CONTROLES DE QUALIDADE
+#SCRIPT TO EXTRACT THE READS QUALITY THAT PASSED THE QUALITY CONTROL
 
-#Devem ser passados 7 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do mapeamento
-#3 - ComCIGAR ou SemCIGAR
-#4 - Qualidade das BASES
-#5 - Porcentagem das BASES cobertas
-#6 - Cobertura das regiões
-#7 - Tipo de amostra
+#The script receives 7 parameters
+#1 - Bam file
+#2 - Mapping quality
+#3 - YesCIGAR or NotCIGAR
+#4 - Bases quality
+#5 - Percentage of covered bases
+#6 - Coverage of regions
+#7 - Sample type
 
-#Parâmetros de desbalanço
+#Inbalance parameters
 #1 - Superior
-#2 - Erros
-#3 - Dúvida de três
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
+#2 - Errors
+#3 - Doubt between three
 
 ####################################################################################
 
@@ -30,7 +27,7 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $qual = 20;
 my $por = 70;
 my $cob = 20;
@@ -53,21 +50,20 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM && $amostra)) {die "\
-$0: \
-Esse script recebe os parâmetros utilizados para as análises e tem como saída um REPORT com as quantidades de reads que passaram em cada uma das etapas de qualidade. \
+This script receives the parameters used for analysis and make a REPORT with the number of reads thas passes each quality step.\
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
-    -c : Cobertura de reads (padrão = 20)\
-    -a : Tipo de amostra analisada SP (suposto pai), M (mãe) ou P (plasma)\
-    -e : Limite para erros de sequenciamento (Padrão = 10)\
-    -s : Limite para considerar HOMOZIGOTO (Padrão = 80)\
-    -d : Limite para considerar HETEROZIGOTO quando existem 3 ou mais (Padrão = 35)\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Bam file
+    -m : Mapping quality of read (default = 20)\
+    -l : YesCIGAR or NotCIGAR (default = NotCIGAR) \
+    -q : Bases quality (default = 20)\
+    -p : Percentage of covered bases (default = 70)\
+    -c : Coverage (default = 20)\
+    -a : Type of sample AF (alleged father), M (mother) or P (plasma)\
+    -e : Limit for sequencing errors (default = 10)\
+    -s : Limit to consider HOMOZYGOUS (default = 80)\
+    -d : Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35)\
 \n";
 }
 
@@ -80,7 +76,7 @@ my $id = $2;
 my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $num1 = 1;
 while (my $pos = <POS>) {
@@ -118,9 +114,9 @@ while (my $pos = <POS>) {
 
     system("wc $nome/$nome.TODOS_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.$cigar.tsv >> report_$micro");
 
-    system("wc $nome/$nome.MENOS_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.MENOS_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
+    system("wc $nome/$nome.LESS_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.LESS_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
 
-    system("wc $nome/$nome.MAIS_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.MAIS_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
+    system("wc $nome/$nome.MORE_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.MORE_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
 
     $num1 += 1;
 
@@ -130,13 +126,13 @@ close (POS);
 
 
 my @PAIRING;
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Não foi possível obter os micro-haplótipos! \n";
 
 while (my $pos = <POS>) {
 
     chomp ($pos);
 
-    open (HAPLO, "$nome/$nome.haplotipos.MAIS_$por.Q$qual.M$map.$cigar.tsv") or die "Não abriu o arquivo de haplotipos! \n";
+    open (HAPLO, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
 
     while (my $line1 = <HAPLO>) {
 	chomp ($line1);
@@ -174,7 +170,7 @@ while ($num2 < $num1) {
     }
 
     push @head, $micro;
-    open (IN, "report_$micro") or die "Não foi possível abrir o arquivo report_$micro! \n";
+    open (IN, "report_$micro") or die "Failed to open report_$micro file! \n";
 
     while (my $line1 = <IN>) {
 	
@@ -217,11 +213,11 @@ while ($num2 < $num1) {
 	    push @TODOS_SNPS, $reads;
 	}
 
-	elsif ($origem eq "MENOS_$por.Q$qual.M$map.$cigar") {
+	elsif ($origem eq "LESS_$por.Q$qual.M$map.$cigar") {
 	    push @MENOS_70, $reads;
 	}
 
-	elsif ($origem eq "MAIS_$por.Q$qual.M$map.$cigar") {
+	elsif ($origem eq "MORE_$por.Q$qual.M$map.$cigar") {
 	    push @MAIS_70, $reads;
 	}
     }
@@ -280,13 +276,13 @@ my @GENOTYPE;
 
 if (($amostra eq "M") || ($amostra eq "SP")) {
 
-    open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+    open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
     while (my $pos = <POS>) {
 
 	chomp ($pos);
 
-	open (GENO, "Genotipos_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Não abriu o arquivo de genotipos! \n";
+	open (GENO, "Genotypes_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open GENOTYPES files! \n";
 	$/ = "\n\n";
 	
 	while (my $line1 = <GENO>) {
