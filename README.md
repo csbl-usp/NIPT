@@ -1,30 +1,44 @@
-# NIPT
-SCRIPTS PARA CALCULAR PROBABILIDADE DE PATERNIDADE
+# Non Invasive Prenatal Testing (NIPT)
 
-1 - Para fazer o cálculo da probabilidade de paternidade:
+### Scripts to calculate the Probability of Paternity using NGS sequencing of Mother, Plasma and Alleged Father
+
+**1. To calculate the Probability of Paternity**
+
+  - Go to the directory where the mother, the plasma and the alleged father's BAM files are located.
+  
+  - Call the script Paternity_Calc.pl 
+    ```
+    Paternity_Calc.pl -X BAM_alleged_father -Y BAM_mother -Z BAM_plasma
+    ```
+  
+  - We settled the default parameters, but it can be changed.
 
 
-a - Entrar na pasta onde estão os arquivos BAM do Suposto Pai, Mãe e Plasma.
+**2. To include a new microhaplotype for analisys**
 
-b - Chamar o script Paternity_Calc.pl, linha de comando - Paternity_Calc.pl -X BAM_suposto_pai -Y BAM_mae -Z BAM_plasma
-
-c - Caso queira, pode mudar os parâmetros.
-
-
-2 - Para incluir um novo micro-haplótipo nas análises:
-
-a - Entrar na pasta teste_1000G
-
-b - Colocar o vcf do novo micro-haplótipo na pasta VCF. (Ex de nome do vcf: 4.7447228-7447353.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf)
-
-c - Colocar a lista de SNPs do novo micro-haplótipo na pasta MICRO. (Ex de nome da lista de SNPs: lista4.7447228-7447353)
-
-d - Chamar o script 1000G.pl, linha de comando - 1000G.pl -v VCF/nome_vcf -m MICRO/nome_lista -n NUM_MICRO
-
-e - A saída será um arquivo chamado MXX_meta_file.txt (onde XX = NUM_MICRO).
-
-f - Colocar o arquivo MXX_meta_file.txt na pasta Haplotipos
-
-g - Abrir o arquivo Arquivos/microhaplotipos.txt, e adicionar uma linha com o chromossomo, posição inicial e posição final do micro-haplótipo. Ex: chr4:7447228-7447353
-
-h - Adicionar no arquivo SNPs.bed os SNPs que fazem parte do novo micro-haplótipo no formato BED de 7 colunas.
+  - Create three folders: **1000G_test**, **Haplotypes** and **Files**.
+  
+  - Inside the folder **1000G_test**, create two folders, onde named **VCF** and other named **MICRO**.
+  
+  - Put the vcf (obtained from 1000 Genomes) in the folder **VCF**. Example of vcf name: 
+      ```
+      4.7447228-7447353.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
+      ```
+  
+  - Put the microhaplotype's list of SNPs in the folder **MICRO**. Example of SNPs' list name:
+      ```
+      lista4.7447228-7447353
+      ```
+  
+  - Call the script 1000G.pl
+  ```
+  1000G.pl -v VCF/vcf_name -m MICRO/list_name -n microhaplotype_number
+  ```
+  
+  - The output is a file named MXX_meta_file.txt (where XX = microhaplotype_number).
+  
+  - Put the file MXX_meta_file.txt in the folder **Haplotypes**
+  
+  - Create a file named **microhaplotypes.txt** inside  the folder **Files**. Add a line in the file with chromosome, start position anb end position (chr4:7447228-7447353).
+  
+  - Create a file named **SNPs.bed** and put the SNPs that compose the microhaplotype in bed format (7 columns).
