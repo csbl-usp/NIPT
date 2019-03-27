@@ -24,9 +24,6 @@
 #2 - Errors
 #3 - Doubt between three
 
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
-
 ####################################################################################
 
 use strict;
@@ -90,13 +87,13 @@ Parameters:\
 ####################################################################################
 
 #Analysis of ALLEGED FATHER
-system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a SP -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a SP -e $erros -s $superior -d $duvida");
 
 #Analysis of MOTHER
-system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_M -m $map -l $cigar -q $qual -p $por -c $cob -a M -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_M -m $map -l $cigar -q $qual -p $por -c $cob -a M -e $erros -s $superior -d $duvida");
 
 #Analysis of PLASMA
-system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
+system("Scripts_PaternityCalc/a_analisa_amostra.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
 
 #PROBABILITY OF PATERNITY calculation
-system("/home/jaque/Desktop/Scripts_Martin/b_calcula_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
+system("Scripts_PaternityCalc/b_calcula_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
