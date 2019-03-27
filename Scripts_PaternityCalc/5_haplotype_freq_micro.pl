@@ -1,19 +1,16 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA SEPARAR OS READS QUE TENHAM PASSADO PELO ALINHAMENTO, MAPEAMENTO, QUALIDADE DAS BASES, COBERTURA DOS SNPS E PORCENTAGEM DE SNPS COBERTOS.
+#SCRIPT TO SEPARATE READS THAT HAD PASSED THE ALIGNMENT, MAPPING, BASE QUALITY, SNPS COVERAGE AND PERCENTAGE OF COVERED SNPS.
 
-#Devem ser passados 5 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do mapeamento
-#3 - ComCIGAR ou SemCIGAR
-#4 - Qualidade das BASES
-#5 - Porcentagem de BASES cobertas
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
+#the script receives 5 parameters
+#1 - Bam file
+#2 - Mapping quality
+#3 - YesCIGAR or NotCIGAR
+#4 - Bases quality
+#5 - Percentage of covered bases
 
 ####################################################################################
 
@@ -23,7 +20,7 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $score = 20;
 my $por = 70;
 
@@ -36,16 +33,16 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe cinco entradas, o arquivo BAM, a qualidade de mapeamento, com ou sem CIGAR, qualidade das bases e porcentagem das bases cobertas. A saída é um arquivo com os haplótipos encontrados para cada micro-haplótipo.\
+This script receives five inputs, the bam file, mapping quality, YesCIGAR or NotCIGAR, bases quality and percentage of covered bases. \
+The output is a file with the haplotypes found in each microhaplotype.\
 \
-Parâmetros:\
+Parameters:\
     -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
+    -b : Bam file\
+    -m : Mapping quality of reads (default = 20)\
+    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+    -q : Bases quality (default = 20)\
+    -p : Percentage of covered bases (default = 70)\
 \n";
 }
 
@@ -58,10 +55,10 @@ my $id = $2;
 my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotipos.txt") or die "Failed to open file with microhaplotypes! \n";
 
 #Abrimos o arquivo de saída dos haplótipos encontrados em cada micro-haplótipo
-open (OUT, ">$nome.haplotipos.MAIS_$por.Q$score.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo de saída! \n";
+open (OUT, ">$nome.haplotipos.MORE_$por.Q$score.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
 
 while (my $pos = <POS>) {
 
@@ -74,7 +71,7 @@ while (my $pos = <POS>) {
     my $fim = $3;
 
     
-    open (INFILE, "$nome.MAIS_$por.Q$score.M$map.$cigar/$nome.$chr.$ini-$fim.MAIS_$por.Q$score.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo com os haplótipos! \n";
+    open (INFILE, "$nome.MORE_$por.Q$score.M$map.$cigar/$nome.$chr.$ini-$fim.MORE_$por.Q$score.M$map.$cigar.tsv") or die "Failed to open MORE file! \n";
 
  
     my %haplotipos;
