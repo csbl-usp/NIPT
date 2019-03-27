@@ -1,28 +1,28 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA CALCULAR A PROBABILIDADE DE PATERNIDADE UTILIZANDO OS ARQUIVOS DO SUPOSTO PAI, DA MÃE E DO PLASMA.
+#SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING BAM FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#Devem ser passados 3 arquivos BAM
-#S = Suposto Pai
-#M = Mãe
+#The program receives 3 BAM files
+#S = Alleged father
+#M = Mother
 #P = Plasma
 
-#Devem ser passados 7 parâmetros:
-#1 - Qualidade do mapeamento
+#The program receives 7 parameters
+#1 - Mapping quality
 #2 - ComCIGAR ou SemCIGAR
-#3 - Qualidade das BASES
-#4 - Porcentagem das BASES cobertas
-#5 - Cobertura das regiões do SUPOSTO PAI e da MÃE
-#6 - Cobertura das regiões do PLASMA
-#7 - População do Banco de Dados
+#3 - Bases quality
+#4 - Percentage of covered bases
+#5 - Coverage of regions in alleged father and mother
+#6 - Coverage of regions in plasma
+#7 - 1000G population
 
-#Parâmetros de desbalanço
+#Inbalance parameters
 #1 - Superior
-#2 - Erros
-#3 - Dúvida de três
+#2 - Errors
+#3 - Doubt between three
 
 #Endereços importantes (MARTIN)
 #Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
@@ -64,40 +64,39 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM_SP && $BAM_M && $BAM_P)) {die "\
-$0: \
-Esse script recebe os parâmetros para análise dos dados e a cobertura mínima do plasma. A saída são os genótipos encontrados para a amostra do SUPOSTO PAI, da MÃE e do PLASMA. Para cada micro-haplótipo é obtida a Evidência da Paternidade, e posteriormente calculado o Índice de Paternidade (IP) e a Probabilidade de Paternidade Posterior (W).\
+This script is used to calculate the probability of paternity using three bam files (alleged father, mother and plasma). \
+It receives the parameters to do the analysis. \
+The output are the genotypes of each sample. \
+For each microhaplotype, the EV is obtained and then, the PI and the W is calculated.\
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -S : Arquivo BAM do SUPOSTO PAI\
-    -M : Arquivo BAM da MÃE\
-    -P : Arquivo BAM do PLASMA\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
-    -c : Cobertura de reads do SUPOSTO PAI e MÃE (padrão = 20)\
-    -f : Cobertura de reads do PLASMA (padrão = 1000)\
-    -g : Populacão do 1000 Genomes (padrão = TODOS)\
-    -e : Limite para erros de sequenciamento (Padrão = 10)\
-    -s : Limite para considerar HOMOZIGOTO (Padrão = 80)\
-    -d : Limite para considerar HETEROZIGOTO quando existem 3 ou mais (Padrão = 35)\
+Parameters:\
+    -h ou --help : Show the options\
+    -S : ALLEGED FATHER bam file\
+    -M : MOTHER bam file\
+    -P : PLASMA bam file\
+    -m : Mapping quality of reads (default = 20)\
+    -l : Uses or not the CIGAR info. If NOT (SemCIGAR), consider only (mis)matches. Other option is ComCIGAR (default = SemCIGAR)
+    -q : Bases quality (default = 20)\
+    -p : Percentage of coveraged bases (default = 70)\
+    -c : Coveraged reads of ALLEGED FATHER and MOTHER (default = 20)\
+    -f : Coveraged reads of PLASMA (default = 1000)\
+    -g : Population of 1000 Genomes (default = TODOS)\
+    -e : Limit for sequencing errors (default = 10)\
+    -s : Limit to consider HOMOZYGOUS (default = 80)\
+    -d : Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
 \n";
 }
 
 ####################################################################################
 
-#Fazemos a análise do arquivo do SUPOSTO PAI
+#Analysis of ALLEGED FATHER
 system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a SP -e $erros -s $superior -d $duvida");
 
-#Fazemos a análise do arquivo da MÃE
+#Analysis of MOTHER
 system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_M -m $map -l $cigar -q $qual -p $por -c $cob -a M -e $erros -s $superior -d $duvida");
 
-#Fazemos a análise do arquivo do PLASMA
+#Analysis of PLASMA
 system("/home/jaque/Desktop/Scripts_Martin/a_analisa_amostra.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
 
-#Fazemos o cálculo da PROBABILIDADE DE PATERNIDADE
+#PROBABILITY OF PATERNITY calculation
 system("/home/jaque/Desktop/Scripts_Martin/b_calcula_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
-
-    
-    
