@@ -1,25 +1,22 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA EXTRAIR OS GENÓTIPOS DO SUPOSTO PAI E DA MÃE PARA CADA MICRO-HAPLÓTIPO
+#SCRIPT TO EXTRACT THE GENOTYPES OF ALLEGED FATHER AND MOTHER FOR EACH MICROHAPLOTYPE
 
-#Devem ser passados 6 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do mapeamento
-#3 - ComCIGAR ou SemCIGAR
-#4 - Qualidade das BASES
-#5 - Porcentagem das BASES cobertas
-#6 - Cobertura das regiões
+#The script receives 6 parameters
+#1 - Bam file
+#2 - Mapping quality
+#3 - YesCIGAR or NotCIGAR
+#4 - Bases quality
+#5 - Percentage of covered bases
+#6 - Regions coverage
 
-#Parâmetros de desbalanço
+#Inbalance parameters
 #1 - Superior
-#2 - Erros
-#3 - Dúvida de três
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
+#2 - Errors
+#3 - Doubt between three
 
 ####################################################################################
 
@@ -29,7 +26,7 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $qual = 20;
 my $por = 70;
 my $cob = 20;
@@ -50,22 +47,22 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe seis entradas, o arquivo BAM, a qualidade de mapeamento, com ou sem CIGAR, qualidade das bases, porcentagem de bases cobertas e a cobertura. A saída são os genótipos encontrados para cada micro-haplótipo a ser analisado nessa amostra.\
+This script receives six inputs: bam file, mapping quality, YesCIGAR or NotCIGAR, base quality, percentage of covered bases and coverage. \
+The outputs are the genotypes of each microhaplotype analyzed.\
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
-    -c : Cobertura de reads (padrão = 20)\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Bam file\
+    -m : Mapping quality of reads (default = 20)\
+    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+    -q : Bases quality (default = 20)\
+    -p : Percentage of covered bases (default = 70)\
+    -c : Coverage (default = 20)\
 \
-Caso queira mudar os desbalanços, pode fazer as alterações utilizando 3 variáveis:
-    -e : Limite para erros de sequenciamento (Padrão = 10)\
-    -s : Limite para considerar HOMOZIGOTO (Padrão = 80)\
-    -d : Limite para considerar HETEROZIGOTO quando existem 3 ou mais (Padrão = 35)\
+Inbalance parameters:
+    -e : Limit for sequencing errors (default = 10)\
+    -s : Limit to consider HOMOZYGOUS (default = 80)\
+    -d : Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
 \n";
 }
 
@@ -78,7 +75,7 @@ my $id = $2;
 my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotipos.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $inferior = 100 - $superior;
 
@@ -93,7 +90,7 @@ while (my $pos = <POS>) {
     my $fim = $3;
     
     #Abrimos o arquivo de entrada com as porcentagens relativas dos haplótipos
-    open (INFILE, "$nome/$nome.haplotipos.MAIS_$por.Q$qual.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo com os haplótipos! \n";
+    open (INFILE, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open the HAPLOTYPES file! \n";
     
     my %cobertura;
     my %porcentagem;
