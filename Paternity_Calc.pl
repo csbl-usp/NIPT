@@ -96,4 +96,4 @@ system("Scripts_PaternityCalc/a_analize_sample.pl -b $BAM_M -m $map -l $cigar -q
 system("Scripts_PaternityCalc/a_analize_sample.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
 
 #PROBABILITY OF PATERNITY calculation
-system("Scripts_PaternityCalc/b_calcula_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
+system("Scripts_PaternityCalc/b_calculate_W.pl -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
