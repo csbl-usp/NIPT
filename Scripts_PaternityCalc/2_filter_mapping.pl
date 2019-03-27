@@ -1,16 +1,13 @@
 #!/usr/bin/perl -w
 
-#Autora : Jaqueline Wang
-#Mestre do programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA SEPARAR READS QUE TENHAM UM BOM MAPEAMENTO.
+#SCRIPT TO SEPARATE READ WITH GOOD MAPPING
 
-#Devem ser passados 2 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do mapeamento
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
+#The program receives 2 parameters:
+#1 - Bam file
+#2 - Mapping quality
 
 ####################################################################################
 
@@ -27,15 +24,15 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe duas entradas, o arquivo BAM e a qualidade de mapeamento. A saída são dois arquivos com as sequências no formato BAM: \
-BOM_MAP - contém os reads que estejam com um mapeamento com qualidade maior que o desejado. \ 
-MAU_MAP - contém os reads que estejam com um mapeamento com qualidade menor que o desejado. \
+This script receives two inputs, the bam file and the mapping quality. \
+The outputs are two files with the sequences in bam format. \
+BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
+MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
 \
-Parâmetros:\
-    -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
+Parameters:\
+    -h ou --help : Show the options\
+    -b : Bam files\
+    -m : Mapping quality of reads (default = 20)\
 \n";
 }
 
@@ -49,7 +46,7 @@ my $id = $2;
 my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, " /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
     
@@ -62,13 +59,13 @@ while (my $pos = <POS>) {
     my $fim = $3;
 
     #Abrimos o arquivo BOM_ALN e extraímos as informações de mapeamento
-    open (INFILE, "$nome.BOM_ALN/$nome.$chr.$ini-$fim.BOM_ALN.tsv") or die "Não foi possível abrir o arquivo com os BOMs ALINHAMENTOS! \n";
+    open (INFILE, "$nome.BOM_ALN/$nome.$chr.$ini-$fim.BOM_ALN.tsv") or die "Failed to open BOM_ALN file! \n";
 
     #Mapeamento BOM
-    open (OUT1, ">$nome.$chr.$ini-$fim.BOM_MAP.M$qual.tsv") or die "Não foi possível abrir o arquivo com BOM MAPEAMENTO! \n";
+    open (OUT1, ">$nome.$chr.$ini-$fim.BOM_MAP.M$qual.tsv") or die "Failed to open BOM_MAP file! \n";
 
     #Mapeamento RUIM
-    open (OUT2, ">$nome.$chr.$ini-$fim.MAU_MAP.M$qual.tsv") or die "Não foi possível abrir o arquivo com MAU MAPEAMENTO! \n";
+    open (OUT2, ">$nome.$chr.$ini-$fim.MAU_MAP.M$qual.tsv") or die "Failed to open MAU_MAP file! \n";
     
     while (my $line1 = <INFILE>) {
 
