@@ -1,21 +1,16 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#Script para extrair os haplótipos dos reads que tiveram um mapeamento bom e que a cobertura esteja contemplando todos os SNPs do micro-haplótipo.
+#SCRIPT TO EXTRACT THE HAPLOTYPES FROM THE READS WITH GOOD MAPPING AND COVERING ALL THE SNPS WITHIN THE MICROHAPLOTYPE 
 
-#Devem ser passados 5 parâmetros:
-#1 - Arquivo BAM
-#2 - Qualidade do mapeamento
-#3 - COM ou SEM CIGAR
-#4 - Qualidade das BASES
-#5 - Porcentagem de BASES cobertas
-
-#Endereços importantes (MARTIN)
-#Micro-haplótipos: /home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt
-#Arquivo BED: /home/jaque/Desktop/Scripts_Martin/Arquivos/SNPs.bed 
-#Phred file: /home/jaque/Dektop/Scripts_Martin/Arquivos/phred.txt
+#The script receives 5 parameters
+#1 - Bam file
+#2 - Mapping quality
+#3 - YesCIGAR or NotCIGAR
+#4 - Bases quality
+#5 - Percentage of covered bases
 
 ####################################################################################
 
@@ -25,7 +20,7 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $map = 20;
-my $cigar = "SemCIGAR";
+my $cigar = "NotCIGAR";
 my $score = 20;
 my $por = 70;
 
@@ -38,18 +33,18 @@ GetOptions("help|h" => \$help,
     ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($BAM)) {die "\
-$0: \
-Esse script recebe cinco entradas, o arquivo BAM, a qualidade de mapeamento, com ou sem CIGAR, qualidade das bases e porcentagem de bases cobertas. A saída são dois arquivos: \
-MAIS_XX - contém os haplótipos com mais de XX% de bases cobertas. \
-MENOS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
+This script receives five inputs, the bam file, the mapping quality, with or without CIGAR, bases quality and percentage of covered bases.
+The outputs are two files. \
+MORE_XX - contém os haplótipos com mais de XX% de bases cobertas. \
+LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
 \
-Parâmetros:\
+Parameters:\
     -h ou --help : Mostra as opções\
-    -b : Arquivo BAM\
-    -m : Qualidade do mapeamento dos reads (padrão = 20)\
-    -l : ComCIGAR ou SemCIGAR (padrão = SemCIGAR)
-    -q : Qualidade das bases (padrão = 20)\
-    -p : Porcentagem de bases cobertas (padrão = 70)\
+    -b : Bam file\
+    -m : Mapping quality of reads (default = 20)\
+    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+    -q : Bases quality (default = 20)\
+    -p : Percentage of covered bases (default = 70)\
 \n";
 }
 
@@ -64,7 +59,7 @@ my $data = $3;
 
 
 my %qualidade;
-open (QUAL, "/home/jaque/Desktop/Scripts_Martin/Arquivos/phred.txt") or die "Não foi possível abrir o arquivo com as qualidades das bases! \n";
+open (QUAL, "Files/phred.txt") or die "Failed to open file with bases quality library! \n";
 
 while (my $line1 = <QUAL>) {
     chomp ($line1);
@@ -80,7 +75,7 @@ while (my $line1 = <QUAL>) {
 close (QUAL);
 
 
-open (POS, "/home/jaque/Desktop/Scripts_Martin/Arquivos/microhaplotipos.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to open microhaplotypes! \n";
 
 
 while (my $pos = <POS>) {
@@ -95,7 +90,7 @@ while (my $pos = <POS>) {
     my $fim = $3;
 
     #Abrimos o arquivo com TODOS os SNPs cobertos
-    open (INFILE, "$nome.TODOS_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo com os haplótipos! \n";
+    open (INFILE, "$nome.TODOS_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.$cigar.tsv") or die "Failed to open TODOS_SNPS file! \n";
     
     my @micro;
     my $soma = 0;
@@ -158,7 +153,7 @@ while (my $pos = <POS>) {
     close (INFILE);
 
     #Arquivo com as posições dos SNPs
-    open (BED, "/home/jaque/Desktop/Scripts_Martin/Arquivos/SNPs.bed") or die "Não abriu o BED! \n";
+    open (BED, "Files/SNPs.bed") or die "Failed to open BED file! \n";
     
     my @SNP_id;
     
@@ -177,7 +172,7 @@ while (my $pos = <POS>) {
 
 
     #Abrimos o arquivo com parte dos SNPs cobertos
-    open (INFILE1, "$nome.PARTE_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo com os haplótipos! \n";   
+    open (INFILE1, "$nome.PARTE_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.$cigar.tsv") or die "Failed to open PARTE_SNPS file! \n";   
 
     
     while (my $line4 = <INFILE1>) {
@@ -247,11 +242,11 @@ while (my $pos = <POS>) {
     
     close (INFILE1);
 
-    #Arquivo com MAIS
-    open (OUTMAIS, ">$nome.$chr.$ini-$fim.MAIS_$por.Q$score.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo de saída1! \n";
+    #Arquivo com MORE
+    open (OUTMAIS, ">$nome.$chr.$ini-$fim.MORE_$por.Q$score.M$map.$cigar.tsv") or die "Failed to open MORE file! \n";
 
-    #Arquivo com MENOS
-    open (OUTMENOS, ">$nome.$chr.$ini-$fim.MENOS_$por.Q$score.M$map.$cigar.tsv") or die "Não foi possível abrir o arquivo de saída1! \n";    
+    #Arquivo com LESS
+    open (OUTMENOS, ">$nome.$chr.$ini-$fim.LESS_$por.Q$score.M$map.$cigar.tsv") or die "Failed to open LESS file! \n";    
 
     my @mais_70;
     my @mais_100;
@@ -294,6 +289,6 @@ while (my $pos = <POS>) {
 
 close (POS);
 
-system ("mkdir $nome.MAIS_$por.Q$score.M$map.$cigar $nome.MENOS_$por.Q$score.M$map.$cigar");
-system ("mv $nome.*.MAIS_$por.Q$score.M$map.$cigar.tsv $nome.MAIS_$por.Q$score.M$map.$cigar");
-system ("mv $nome.*.MENOS_$por.Q$score.M$map.$cigar.tsv $nome.MENOS_$por.Q$score.M$map.$cigar");
+system ("mkdir $nome.MORE_$por.Q$score.M$map.$cigar $nome.LESS_$por.Q$score.M$map.$cigar");
+system ("mv $nome.*.MORE_$por.Q$score.M$map.$cigar.tsv $nome.MORE_$por.Q$score.M$map.$cigar");
+system ("mv $nome.*.LESS_$por.Q$score.M$map.$cigar.tsv $nome.LESS_$por.Q$score.M$map.$cigar");
