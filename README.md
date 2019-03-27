@@ -15,10 +15,8 @@
 
 
 **2. To include a new microhaplotype for analisys**
-
-  - Create three folders: **1000G_test**, **Haplotypes** and **Files**.
   
-  - Inside the folder **1000G_test**, create two folders, onde named **VCF** and other named **MICRO**.
+  - Inside the folder **1000G_test**, there are two folders, onde named **VCF** and other named **MICRO**.
   
   - Put the vcf (obtained from 1000 Genomes) in the folder **VCF**. Example of vcf name: 
       ```
