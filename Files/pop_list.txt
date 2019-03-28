@@ -1,4 +1,4 @@
-TODOS	TODOS
+ALL	ALL
 s	AFR
 s	AMR
 s	EAS
