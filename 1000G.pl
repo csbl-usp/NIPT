@@ -38,6 +38,6 @@ Parameters: \
 
 ####################################################################################
 
-system ("Script_1000G/a_calc_freq_ALL_POP_SUPER.pl -v $vcf -m $micro -n $num");
+system ("Scripts_1000G/a_calc_freq_ALL_POP_SUPER.pl -v $vcf -m $micro -n $num");
 
-system ("Script_1000G/b_make_META_FILE.pl -n $num");
+system ("Scripts_1000G/b_make_META_FILE.pl -n $num");
