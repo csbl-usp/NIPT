@@ -28,11 +28,12 @@
       list4.7447228-7447353
       ```
   
-  - Call the script 1000G.pl (inside the NIPT folder). The microhaplotype number has to be sequencial and two numbers (01, 02 ...).
+  - Call the script 1000G.pl (inside the NIPT folder).
     ```
     ./1000G.pl -v 1000G_test/VCF/vcf_name -m 1000G_test/MICRO/list_name -n microhaplotype_number
     ```
-  
+    Obs: The microhaplotype number has to be sequencial and composed of two numbers.
+    
   - The output is a file named MXX_meta_file.txt (where XX = microhaplotype_number).
   
   - Put the file MXX_meta_file.txt in the folder **Haplotypes**.
