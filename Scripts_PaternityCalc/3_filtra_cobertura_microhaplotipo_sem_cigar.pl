@@ -5,9 +5,11 @@
 
 #SCRIPT TO SEPARATE READS THAT COVER ALL THE SNPS CONSIDERING ONLY (MIS)MATCHES IN THE CIGAR
 
-#The script receives 3 parameters
+#The script receives 4 parameters
 #1 - Bam file
 #2 - Mapping quality
+#3 - Trio number
+#4 - Sample type
 
 ####################################################################################
 
@@ -17,33 +19,35 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $map = 20;
+my $amostra;
+my $trio;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
-	   "m=s" => \$map
+	   "m=s" => \$map,
+	   "t=s" => \$trio,
+	   "a=s" => \$amostra
     ) or die "Erro ao pegar as opções! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives one input, the bam file. The outputs are three files. \
-CIGAR_RUIM - contain read where the CIGAR shows insertions, deletions, etc. \
-TODOS_SNPS - contain reads with ALL the SNPs covered. \
-PARTE_SNPS - contain reads with PART of the SNPs covered. \
+if ($help || !($BAM && $amostra && $trio)) {die "\
+This script receives four inputs, the bam file, the trio number, the sample type and the mapping quality. \ 
+The outputs are three files. \
+	CIGAR_RUIM - contain read where the CIGAR shows insertions, deletions, etc. \
+	TODOS_SNPS - contain reads with ALL the SNPs covered. \
+	PARTE_SNPS - contain reads with PART of the SNPs covered. \
 \
 Parameters: \
 	-h	Show the options \
 	-b	Bam file \
+	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
 	-m	Mapping quality of reads (default = 20) \
 \n";
 }
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 
