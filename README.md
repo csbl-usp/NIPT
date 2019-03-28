@@ -29,13 +29,13 @@
       ```
   
   - Call the script 1000G.pl (inside the NIPT folder).
-  ```
-  ./1000G.pl -v 1000G_test/VCF/vcf_name -m 1000G_test/MICRO/list_name -n microhaplotype_number
-  ```
+    ```
+    ./1000G.pl -v 1000G_test/VCF/vcf_name -m 1000G_test/MICRO/list_name -n microhaplotype_number
+    ```
   
   - The output is a file named MXX_meta_file.txt (where XX = microhaplotype_number).
   
-  - Put the file MXX_meta_file.txt in the folder **Haplotypes**
+  - Put the file MXX_meta_file.txt in the folder **Haplotypes**.
   
   - There is a file named **microhaplotypes.txt** inside the folder **Files**. Add a line in the file with chromosome, start position and end position (chr4:7447228-7447353).
   
