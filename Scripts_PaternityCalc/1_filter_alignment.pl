@@ -5,8 +5,10 @@
 
 #SCRIPT TO SEPARATE READ WITH A GOOD ALIGNMENT 
 
-#The program receives 1 parmeter:
+#The program receives 3 parmeters:
 #1 - Bam file
+#2 - Trio Number
+#3 - Sample type
 
 ####################################################################################
 
@@ -15,30 +17,32 @@ use Getopt::Long;
 
 my $help = 0;
 my $BAM;
+my $trio;
+my $amostra;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM
+	   "b=s" => \$BAM,
+	   "t=s" => \$trio,
+	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives the bam file. The outputs are two files with sequences in bam format. \
-BOM_ALN - contain reads aligned only in ONE region. \
-MAU_ALN - contain reads aligned in more than ONE region. \
+if ($help || !($BAM && $trio && $amostra)) {die "\
+This script receives the bam file, the trio number and the sample type. \
+The outputs are two files with sequences in bam format. \
+	BOM_ALN - contain reads aligned only in ONE region. \
+	MAU_ALN - contain reads aligned in more than ONE region. \
 \
 Parameters: \
 	-h	Show the options \
 	-b	Bam file \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
+	-t	Trio number \
 \n";
 }
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
  
