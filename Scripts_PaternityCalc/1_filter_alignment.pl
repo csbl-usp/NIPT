@@ -27,16 +27,18 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM && $trio && $amostra)) {die "\
-This script receives the bam file, the trio number and the sample type. \
-The outputs are two files with sequences in bam format. \
+This script requires three inputs, the bam file, the trio number and the sample type. \
+The outputs are two files. \
 	BOM_ALN - contain reads aligned only in ONE region. \
 	MAU_ALN - contain reads aligned in more than ONE region. \
 \
-Parameters: \
-	-h	Show the options \
+Required parameters: \
 	-b	Bam file \
-	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
+\
+Other parameters: \
+	-h	Mostra as opções \
 \n";
 }
 
