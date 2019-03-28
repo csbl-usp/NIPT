@@ -8,12 +8,12 @@
   
   - Using the terminal, change the files permissions with the following command.
     ```
-    chmod 755 -R NIPT_master
+    chmod 755 -R NIPT-master
     ```
   
 **2. Download the Samtools package**
 
-  - Download the Samtools package, versions 1.3.1.
+  - Download the Samtools package, version 1.3.1.
     ```
     https://sourceforge.net/projects/samtools/files/samtools/1.3.1/
     ```
@@ -26,7 +26,7 @@
     make
     ```    
 
-**2. To include a new microhaplotype for analisys**
+**3. To include a new microhaplotype for analisys**
   
   - Inside the folder **1000G_test**, there are two folders, onde named **VCF** and other named **MICRO**.
   
@@ -55,7 +55,7 @@
   - There is a file named **SNPs.bed** inside the folder **Files**. Put the SNPs that compose the microhaplotype in bed format (7 columns).
 
 
-**3. To calculate the probability of paternity**
+**4. To calculate the probability of paternity**
 
   - Go to the directory where the mother, the plasma and the alleged father's BAM files are located.
   
