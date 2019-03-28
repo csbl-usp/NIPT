@@ -2,7 +2,7 @@
 
 ### Scripts to calculate the probability of paternity using NGS data of mother, plasma and alleged father
 
-**1. To start**
+**1. Download NIPT package**
 
   - Download the NIPT package.
   
@@ -11,10 +11,20 @@
     chmod 755 -R NIPT_master
     ```
   
-  - Download the Samtools package, versions 1.3.1 (https://sourceforge.net/projects/samtools/files/samtools/1.3.1/).
+**2. Download the Samtools package**
+
+  - Download the Samtools package, versions 1.3.1.
+    ```
+    https://sourceforge.net/projects/samtools/files/samtools/1.3.1/
+    ```
   
-  - Unzip the Samtools package and put inside the Samtools folder.
-    
+  - Unzip the Samtools package and put inside the **Samtools** folder.
+  
+  - Inside the folder **Samtools/samtools-1.3.1**, run the following commands:
+    ```
+    ./configure
+    make
+    ```    
 
 **2. To include a new microhaplotype for analisys**
   
