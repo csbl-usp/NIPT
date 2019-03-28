@@ -38,7 +38,7 @@ Required parameters: \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 \
 Other parameters: \
-	-h	Mostra as opções \
+	-h	Show the options \
 \n";
 }
 
