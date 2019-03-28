@@ -29,10 +29,10 @@ if ($help || !($vcf && $micro && $num)) {die "\
 This script requires three parameters. \
 \
 Parameters: \
-     -h	Show the options \
-     -v	Vcf file from 1000 Genomes \
-     -m	List of SNPs that compose the microhaplotype \
-     -n	Microhaplotype number \
+	-h	Show the options \
+	-v	Vcf file from 1000 Genomes \
+	-m	List of SNPs that compose the microhaplotype \
+	-n	Microhaplotype number \
 \n";
 }
 
