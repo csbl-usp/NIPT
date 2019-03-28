@@ -28,7 +28,7 @@
       list4.7447228-7447353
       ```
   
-  - Call the script 1000G.pl (inside the NIPT folder).
+  - Call the script 1000G.pl (inside the NIPT folder). The microhaplotype number has to be sequencial and two numbers (01, 02 ...).
     ```
     ./1000G.pl -v 1000G_test/VCF/vcf_name -m 1000G_test/MICRO/list_name -n microhaplotype_number
     ```
