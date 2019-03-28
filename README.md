@@ -37,6 +37,6 @@
   
   - Put the file MXX_meta_file.txt in the folder **Haplotypes**.
   
-  - There is a file named **microhaplotypes.txt** inside the folder **Files**. Add a line in the file with chromosome, start position and end position (chr4:7447228-7447353).
+  - There is a file named **Microhaplotypes.txt** inside the folder **Files**. Add a line in the file with chromosome, start position and end position (chr4:7447228-7447353).
   
   - There is a file named **SNPs.bed** inside the folder **Files**. Put the SNPs that compose the microhaplotype in bed format (7 columns).
