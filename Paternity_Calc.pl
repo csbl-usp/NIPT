@@ -5,12 +5,12 @@
 
 #SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING BAM FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#The program receives 3 BAM files
+#The program requires 3 bam files
 #S = Alleged father
 #M = Mother
 #P = Plasma
 
-#The program receives 7 parameters
+#The program requires 7 parameters
 #1 - Mapping quality
 #2 - YesCIGAR ou NotCIGAR
 #3 - Bases quality
@@ -58,29 +58,26 @@ GetOptions("help|h" => \$help,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
 	   "g=s" => \$Genome
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM_SP && $BAM_M && $BAM_P)) {die "\
 This script is used to calculate the probability of paternity using three bam files (alleged father, mother and plasma). \
-It receives the parameters to do the analysis. \
-The output are the genotypes of each sample. \
-For each microhaplotype, the EV is obtained and then, the PI and the W is calculated.\
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -S : ALLEGED FATHER bam file\
-    -M : MOTHER bam file\
-    -P : PLASMA bam file\
-    -m : Mapping quality of reads (default = 20)\
-    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR)
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
-    -c : Coveraged reads of ALLEGED FATHER and MOTHER (default = 20)\
-    -f : Coveraged reads of PLASMA (default = 1000)\
-    -g : Population of 1000 Genomes (default = ALL)\
-    -e : Limit for sequencing errors (default = 10)\
-    -s : Limit to consider HOMOZYGOUS (default = 80)\
-    -d : Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
+Parameters: \
+	-h	Show the options \
+	-S	ALLEGED FATHER bam file \
+	-M	MOTHER bam file \
+	-P	PLASMA bam file \
+	-m	Mapping quality of reads (default = 20) \
+	-l	Use or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
+	-c	Coveraged reads of ALLEGED FATHER and MOTHER (default = 20) \
+	-f	Coveraged reads of PLASMA (default = 1000) \
+	-g	Population of 1000 Genomes (default = ALL) \
+	-e	Limit for sequencing errors (default = 10) \
+	-s	Limit to consider HOMOZYGOUS (default = 80) \
+	-d	Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35) \
 \n";
 }
 
