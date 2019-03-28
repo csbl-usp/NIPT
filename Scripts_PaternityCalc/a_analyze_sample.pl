@@ -16,7 +16,7 @@
 #7_make_report.pl
 
 
-#The program requires 7 parameters:
+#The program requires 8 parameters:
 #1 - Bam file
 #2 - Mapping quality
 #3 - YesCIGAR ou NotCIGAR
@@ -24,6 +24,7 @@
 #5 - Percentage of covered bases
 #6 - Coverage of regions
 #7 - Sample type
+#8 - Trio number
 
 #Inbalance parameters
 #1 - Superior
@@ -46,6 +47,7 @@ my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
 my $amostra;
+my $trio;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
@@ -57,16 +59,18 @@ GetOptions("help|h" => \$help,
 	   "e=s" => \$erros,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
-	   "a=s" => \$amostra
+	   "a=s" => \$amostra,
+	   "t=s" => \$trio
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $amostra)) {die "\
+if ($help || !($BAM && $amostra && $trio)) {die "\
 This script receives the parameters to analyze the sample data (alleged father, mother or plasma). \
 The output are the sample genotypes and a quality report for the data. \
 \
 Parameters: \
 	-h	Show the options \
 	-b	BAM file \
+	-t	Trio number \
 	-m	Mapping quality of reads (default = 20) \
 	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
@@ -82,36 +86,32 @@ Parameters: \
 my $nome_genotipo = "Genotypes_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 my $nome_report = "MCoverage_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio";
 
 ##Roda todos os scripts para análise
 
-system ("Scripts_PaternityCalc/1_filter_alignment.pl -b $BAM");
+system ("Scripts_PaternityCalc/1_filter_alignment.pl -b $BAM -t $trio");
 
-system ("Scripts_PaternityCalc/2_filter_mapping.pl -b $BAM -m $map");
+system ("Scripts_PaternityCalc/2_filter_mapping.pl -b $BAM -m $map -t $trio");
 
 if ($cigar eq "NotCIGAR") {
-    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_not_cigar.pl -b $BAM -m $map");
+    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_not_cigar.pl -b $BAM -m $map -t $trio");
 }
 
 elsif ($cigar eq "YesCIGAR") {
-    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_yes_cigar.pl -b $BAM -m $map");
+    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_yes_cigar.pl -b $BAM -m $map -t $trio");
 }
     
-system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $cigar -q $qual -p $por");
+system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio");
    
-system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por");
+system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio");
 
-system ("mkdir $nome");
+system ("mkdir BAM/$nome");
 
-system ("mv $nome.* $nome");
+system ("mv $nome.* BAM/$nome");
 
 if (($amostra eq "AF") || ($amostra eq "M")) {
-    system ("Scripts_PaternityCalc/6_extract_genotype.pl -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
+    system ("Scripts_PaternityCalc/6_extract_genotype.pl -t $trio -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
 }
 
-system("Scripts_PaternityCalc/7_make_report.pl -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -a $amostra -e $erros -s $superior -d $duvida > $nome_report");
+system("Scripts_PaternityCalc/7_make_report.pl -t $trio -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -a $amostra -e $erros -s $superior -d $duvida > $nome_report");
