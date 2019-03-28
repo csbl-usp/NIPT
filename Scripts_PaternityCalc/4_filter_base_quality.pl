@@ -30,7 +30,7 @@ GetOptions("help|h" => \$help,
 	   "l=s" => \$cigar,
 	   "q=s" => \$score,
 	   "p=s" => \$por
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM)) {die "\
 This script receives five inputs, the bam file, the mapping quality, with or without CIGAR, bases quality and percentage of covered bases.
@@ -38,13 +38,13 @@ The outputs are two files. \
 MORE_XX - contém os haplótipos com mais de XX% de bases cobertas. \
 LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
 \
-Parameters:\
-    -h ou --help : Mostra as opções\
-    -b : Bam file\
-    -m : Mapping quality of reads (default = 20)\
-    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
+Parameters: \
+	-h	Mostra as opções \
+	-b	Bam file \
+	-m	Mapping quality of reads (default = 20) \
+	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
 \n";
 }
 
@@ -57,7 +57,6 @@ my $nome = $1;
 my $id = $2;
 my $data = $3;
 
-
 my %qualidade;
 open (QUAL, "Files/phred.txt") or die "Failed to open file with bases quality library! \n";
 
@@ -67,23 +66,17 @@ while (my $line1 = <QUAL>) {
 
     if (!exists $qualidade{$qual1}) {
 	$qualidade{$qual1} = $qual2;
-
     }
- 
 } #while (my $line1 = <QUAL>)
 
 close (QUAL);
 
-
-open (POS, "Files/microhaplotypes.txt") or die "Failed to open microhaplotypes! \n";
-
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to open microhaplotypes! \n";
 
 while (my $pos = <POS>) {
-
     chomp ($pos);
     
     #Usamos esse match para armazenar o cromossomo e a posição inicial e final do micro-haplótipo
-    
     $pos =~ m/(chr[0-9]+):(.*)-(.*)/;
     my $chr = $1;
     my $ini = $2;
@@ -96,7 +89,6 @@ while (my $pos = <POS>) {
     my $soma = 0;
      
     while (my $line2 = <INFILE>) {
-	
 	chomp ($line2);
 	$soma = $soma + 1;
 	my ($haplo1, $qual) = split(/\t/, $line2);
@@ -109,45 +101,31 @@ while (my $pos = <POS>) {
 	my @new_bases;
 	my @new_qual1;
 	
-	
 	while ($count < $tamanho) {
 	    foreach my $key1(keys(%qualidade)) {
 		if (($dados[$count] eq $key1) && ($dados[$count] == $key1)){
 		    
 		    if ($qualidade{$key1} >= $score) {
-			
 			push @new_bases, $bases[$count];
 			push @new_qual1, $qualidade{$key1};
-						
 		    }
 		    
 		    elsif ($qualidade{$key1} < $score) {
-			
 			my $erro = "-";
 			push @new_bases, $erro;
 			push @new_qual1, "0";
-			
-			
 		    }
-		    
 		}
-		
 	    }
 	    
 	    $count = $count + 1;
-	    
 	}
-	
-	
+
 	my $haplo = join("",@new_bases);
 	my $qual_info1 = join(",", @new_qual1);
-	
-	
+
 	my $concat = join("\t", $haplo, $qual_info1);
-	
 	push @micro, $concat;
-	
-	
     } #while (my $line2 = <INFILE>)
     
     close (INFILE);
@@ -163,20 +141,15 @@ while (my $pos = <POS>) {
 	
 	if (($info[0] eq $chr) && ($info[1] >= $ini) && ($info[1] <= $fim)){
 	    push @SNP_id, $info[3];
-	    
 	} #if (($info[0] eq $chr) && ($info[1] >= $ini) && ($info[1] <= $fim))
-	
     } #while (my $line3 = <BED>)
     
     close (BED); 
 
-
     #Abrimos o arquivo com parte dos SNPs cobertos
     open (INFILE1, "$nome.PARTE_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.$cigar.tsv") or die "Failed to open PARTE_SNPS file! \n";   
-
     
     while (my $line4 = <INFILE1>) {
-	
 	$soma = $soma + 1;
 	chomp ($line4);
 	my ($haplo2, $qual2, $SNP) = split(/\t/, $line4);
@@ -202,44 +175,33 @@ while (my $pos = <POS>) {
 			if ($qualidade{$key1} >= $score) {
 			    push @new_bases, $bases[$count2];
 			    push @new_qual1, $qualidade{$key1};
-			    
 			}
 			
 			elsif ($qualidade{$key1} < $score) {
 			    my $erro = "-";
 			    push @new_bases, $erro;
 			    push @new_qual1, "0";
-			    
 			}
 		    }
-		    
 		}
 		$count1 = $count1 + 1;
 		$count2 = $count2 + 1;
-		
-		
+
 	    } # if
 	    
 	    elsif ($id[$count2] ne $SNP_id[$count1]) {
 		push @new_bases, "-";
 		push @new_qual1, "0";
 		$count1 = $count1 + 1;
-		
 	    } # elsif
-	    
 	} # while ($count1 <= $tam)
 	
 	my $haplo1 = join("", @new_bases);
 	my $qual1 = join(",", @new_qual1);
-	
 	my $concat = join("\t", $haplo1, $qual1);
 	
 	push @micro, $concat;
-	
-	
     }
-    
-    
     close (INFILE1);
 
     #Arquivo com MORE
@@ -266,7 +228,6 @@ while (my $pos = <POS>) {
 
 	    if ($indef == 0) {
 		push @mais_100, $haplo;
-
 	    }
 	}
 	    
@@ -274,18 +235,10 @@ while (my $pos = <POS>) {
 	    print OUTMENOS "$key2\n";
 	    $descartados += 1;
 	}
-	    
-
     }
-
-
     close (OUTMAIS);
     close (OUTMENOS);
-     
 } #while (my $pos = <POS>)
-
-
-
 
 close (POS);
 
