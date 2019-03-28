@@ -86,32 +86,32 @@ Parameters: \
 my $nome_genotipo = "Genotypes_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 my $nome_report = "MCoverage_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 
-my $nome = "Sample$amostra";
+my $nome = "Trio$trio"."_Sample$amostra";
 
 ##Roda todos os scripts para análise
 
-system ("Scripts_PaternityCalc/1_filter_alignment.pl -b $BAM -t $trio");
+system ("Scripts_PaternityCalc/1_filter_alignment.pl -b $BAM -t $trio -a $amostra");
 
-system ("Scripts_PaternityCalc/2_filter_mapping.pl -b $BAM -m $map -t $trio");
+system ("Scripts_PaternityCalc/2_filter_mapping.pl -b $BAM -m $map -t $trio -a $amostra");
 
 if ($cigar eq "NotCIGAR") {
-    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_not_cigar.pl -b $BAM -m $map -t $trio");
+    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_not_cigar.pl -b $BAM -m $map -t $trio -a $amostra");
 }
 
 elsif ($cigar eq "YesCIGAR") {
-    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_yes_cigar.pl -b $BAM -m $map -t $trio");
+    system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_yes_cigar.pl -b $BAM -m $map -t $trio -a $amostra");
 }
     
-system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio");
+system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio -a $amostra");
    
-system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio");
+system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio -a $amostra");
 
 system ("mkdir BAM/Trio$trio/$nome");
 
 system ("mv $nome.* BAM/Trio$trio/$nome");
 
 if (($amostra eq "AF") || ($amostra eq "M")) {
-    system ("Scripts_PaternityCalc/6_extract_genotype.pl -t $trio -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
+    system ("Scripts_PaternityCalc/6_extract_genotype.pl -t $trio -a $amostra -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
 }
 
 system("Scripts_PaternityCalc/7_make_report.pl -t $trio -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -a $amostra -e $erros -s $superior -d $duvida > $nome_report");
