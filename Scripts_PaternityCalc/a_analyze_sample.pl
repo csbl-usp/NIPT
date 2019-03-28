@@ -86,7 +86,7 @@ Parameters: \
 my $nome_genotipo = "Genotypes_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 my $nome_report = "MCoverage_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt";
 
-my $nome = "Trio$trio";
+my $nome = "Sample$amostra";
 
 ##Roda todos os scripts para análise
 
@@ -106,9 +106,9 @@ system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $ciga
    
 system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por -t $trio");
 
-system ("mkdir BAM/$nome");
+system ("mkdir BAM/Trio$trio/$nome");
 
-system ("mv $nome.* BAM/$nome");
+system ("mv $nome.* BAM/Trio$trio/$nome");
 
 if (($amostra eq "AF") || ($amostra eq "M")) {
     system ("Scripts_PaternityCalc/6_extract_genotype.pl -t $trio -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
