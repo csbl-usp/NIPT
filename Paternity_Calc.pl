@@ -87,6 +87,8 @@ Parameters: \
 
 ####################################################################################
 
+system("mkdir BAM/Trio$trio");
+
 #Analysis of ALLEGED FATHER
 system("Scripts_PaternityCalc/a_analyze_sample.pl -t $trio -b $BAM_SP -m $map -l $cigar -q $qual -p $por -c $cob -a AF -e $erros -s $superior -d $duvida");
 
