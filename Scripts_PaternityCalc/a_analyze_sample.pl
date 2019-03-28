@@ -75,7 +75,7 @@ Parameters: \
 	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
 	-p	Percentage of covered bases (default = 70) \
-	-c	Coveraged reads (default = 20) \
+	-c	Covered reads (default = 20) \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
 	-e	Limit for sequencing errors (default = 10) \
 	-s	Limit to consider HOMOZYGOUS (default = 80) \
