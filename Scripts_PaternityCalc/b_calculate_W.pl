@@ -50,7 +50,7 @@ GetOptions("help|h" => \$help,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
 	   "g=s" => \$Genome
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM)) {die "\
 This script receives the parameters to analyze the data and the plasma minimum coverage.\
@@ -58,18 +58,18 @@ The outputs are the genotypes for alleged father, mother and plasma.\
 For each microhaplotype, the EV is obtained, then, the PI and W are calculated. \
 \
 Parameters:\
-    -h ou --help : Show the options\
-    -b : Plasma bam file\
-    -m : Mapping quality of reads (default = 20)\
-    -l : YesCIGAR or NotCIGAR (default = NotCIGAR)
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
-    -c : Coverage of alleged father and mother (padrão = 20)\
-    -f : Coverage of plasma ( = 1000)\
-    -g : Population from 1000 Genomes (default = ALL)\
-    -e : Limit for sequencing errors (default = 10)\
-    -s : Limit to consider HOMOZYGOUS (default = 80)\
-    -d : Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35)\
+	-h	Show the options \
+	-b	Plasma bam file \
+	-m	Mapping quality of reads (default = 20) \
+	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
+	-c	Coverage of alleged father and mother (default = 20) \
+	-f	Coverage of plasma (default = 1000) \
+	-g	Population from 1000 Genomes (default = ALL) \
+	-e	Limit for sequencing errors (default = 10) \
+	-s	Limit to consider HOMOZYGOUS (default = 80) \
+	-d	Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35) \
 \n";
 }
 
@@ -88,26 +88,22 @@ my $tem_mut = 0;
 
 ####################################################################################
 
-open (POS, "Files/microhaplotipos.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $M = 1;
 
 while (my $pos = <POS>) {
-
     chomp ($pos);
     print "$pos\n";
 
     #Usamos esse match para armazenar o cromossomo e a posição inicial e final do micro-haplótipo
-    
     $pos =~ m/(chr[0-9]+):(.*)-(.*)/;
     my $chr = $1;
     my $ini = $2;
     my $fim = $3;
     
-####################################################################################
-
+    ###################################################################################
     #Abrimos os arquivos de qualidade dos haplotipos e armazenamos as informacoes de cobertura e porcentagem de cada haplotipo encontrado
-    
     open (INFILE, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
     
     my %cobertura;
@@ -115,84 +111,62 @@ while (my $pos = <POS>) {
     my $n_reads = 0;
     
     while (my $line1 = <INFILE>) {
-
 	chomp ($line1);
 	my @dados = split(/\t/, $line1);
 
 	if ($pos eq $dados[0]) {
-
 	    $porcentagem{$dados[1]} = $dados[3];
 	    $cobertura{$dados[1]} = $dados[2];
 	    $n_reads = $n_reads + $cobertura{$dados[1]};
-	    
 	}
-
     }
     close (INFILE);
 
-####################################################################################
-
+    ####################################################################################
     #Buscamos os haplotipos do pai no arquivo do PAI
     open (PAI, "Genotypes_AF.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
-    
     $/ = "\n\n";
-
     my %haplo_pai;
     
     while (my $line2 = <PAI>) {
-
 	chomp ($line2);
-	
-	if ($line2 =~ m/$pos/g) {
 
+	if ($line2 =~ m/$pos/g) {
 	    my @array = split(/\n/, $line2);
 	    
 	    foreach my $key(@array) {
-
 		if ($key =~ m/[ATCG]+/g) {
-
 		    my ($haplo, $porce, $cober) = split(/\t/, $key);
 		    $haplo_pai{$haplo} = $porce."\t".$cober;
-
 		}
 	    }
 	}
     }
-
     close (PAI);
 
-
-####################################################################################
-
+    ####################################################################################
     #Buscamos os haplotipos da mae no arquivo da MAE
     open (MAE, "Genotypes_M.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the M GENOTYPES file! \n";
-
     my %haplo_mae;
     
     while (my $line3 = <MAE>) {
-
 	chomp ($line3);
 	
 	if ($line3 =~ m/$pos/g) {
-
 	    my @array = split(/\n/, $line3);
 	    
 	    foreach my $key(@array) {
 
 		if ($key =~ m/[ATCG]+/g) {
-
 		    my ($haplo, $porce, $cober) = split(/\t/, $key);
 		    $haplo_mae{$haplo} = $porce."\t".$cober;
-		    		    
 		}
 	    }
 	}
     }
-
     close (MAE);
 
     $/ = "\n";
-
     
     #Buscamos os haplotipos do feto que podem ter sido herdados do pai
     my %herda_pai;
@@ -213,7 +187,6 @@ while (my $pos = <POS>) {
 	    if (($porcentagem{$key1} >= 1) && ($porcentagem{$key1} <= 12) && ($n_reads >= $cob)) {
 		
 		if (exists($haplo_pai{$key1})) {
-		    
 		    my $num = sprintf "%.2f", $porcentagem{$key1};
 		    $herda_pai{$key1} = "$num%\t$cobertura{$key1}X";
 		}
@@ -229,58 +202,50 @@ while (my $pos = <POS>) {
 		$problemas{$key1} = "$num%\t$cobertura{$key1}X";
 
 	    }
-
 	}
     }
-
 	
     #Verificamos se existem haplotipos comuns entre o suposto pai e a mae
-	
-	
     if (((scalar keys %haplo_pai) > 0) && ((scalar keys %haplo_mae) > 0) && ($n_reads>= $cob) && ((scalar keys %haplo_mae) == (scalar keys %mae_plasma)) && ((scalar keys %problemas) == 0)) {
 	
-	print "HAPLO SUPOSTO PAI!\n";
+	print "HAPLO ALLEGED FATHER!\n";
 	foreach my $keyp(keys(%haplo_pai)) {
 	    print "$keyp\t$haplo_pai{$keyp}\n";
 	}
 
 	print "\n";
-	print "HAPLO MÃE!\n";
+	print "HAPLO MOTHER!\n";
 
 	foreach my $keym(keys(%haplo_mae)) {
 	    print "$keym\t$haplo_mae{$keym}\n";
 	}
 
-	print "HAPLO MÃE PLASMA\n";
+	print "HAPLO MOTHER-PLASMA\n";
 
 	foreach my $keymp(keys(%mae_plasma)) {
 	    print "$keymp\t$mae_plasma{$keymp}\n";
 	}
 
 	print "\n";
-	print "HERDA SUPOSTO PAI! \n";
+	print "INHERIT ALLEGED FATHER! \n";
 
 	foreach my $keyf(keys(%herda_pai)) {
 	    print "$keyf\t$herda_pai{$keyf}\n";
 	}
 
 	print "\n";
-	print "ERRO SEQ! \n";
-
+	print "SEQ ERROR! \n";
 	my $dist_erro = 0;
 	
 	foreach my $keye(keys(%haplo_erro)) {
-	    
 	    my @e_base = $keye =~ m/[ATCG]/g;
 	    my $dist = scalar(@e_base);
 
 	    foreach my $key1(keys(%herda_pai)) {
-			
 		my $cont1 = 0;
 		my $cont2 = 0;
 		my @p_base = $key1 =~ m/[ATCG]/g;
-			
-			
+				
 		while ($cont1 < scalar(@p_base)) {
 		    if ($p_base[$cont1] ne $e_base[$cont1]) {
 			$cont1 += 1;
@@ -298,11 +263,9 @@ while (my $pos = <POS>) {
 	    }
 	    
 	    foreach my $key2(keys(%haplo_mae)) {
-			
 		my $cont1 = 0;
 		my $cont2 = 0;
 		my @m_base = $key2 =~ m/[ATCG]/g;
-			
 			
 		while ($cont1 < scalar(@m_base)) {
 		    if ($m_base[$cont1] ne $e_base[$cont1]) {
@@ -319,30 +282,23 @@ while (my $pos = <POS>) {
 		    $dist = $cont2;
 		}
 	    }
-	
-	    
+    
 	    print "$keye\t$haplo_erro{$keye}\t$dist\n";
 	    
 	    if ($dist_erro < $dist) {
 		$dist_erro = $dist;
-
 	    }
-
 	}
-
 	print "\n";
-
 
 	if ((scalar keys %herda_pai) > 0) {
 	    $tem_ff += 1;
 	}
 
-
 	my $ev1 = 0;
 	foreach my $key1(keys(%haplo_pai)) {
 	    if (exists($haplo_mae{$key1})) {
 		$ev1 += 1;
-		
 	    }
 	}
 	
@@ -362,18 +318,15 @@ while (my $pos = <POS>) {
 	    $ev += 1;
 	}
 
-
 	elsif ((scalar keys %herda_pai) >= 2) {
 	    $ev += 1;
 	}
 
-	print "RESUMO\n";
+	print "RESUME\n";
 	print "EV = $ev\n";
 	$conta_m += 1;
-
 	
 	##Calcular o IP!!
-
 	my $n_h_mae = scalar keys %haplo_mae;
 	my $n_h_pai = scalar keys %haplo_pai;
 	my $n_h_feto = scalar keys %herda_pai;
@@ -382,16 +335,13 @@ while (my $pos = <POS>) {
 	
 	if ($M < 10) {
 	    $meta_file = "M0".$M.".meta_file.txt";
-
 	}
 
 	elsif ($M >= 10) {
 	    $meta_file = "M".$M.".meta_file.txt";
-
 	}
 
 	open (META, "Haplotypes/$meta_file") or die "Failed to open meta file! \n";
-
 	my $meta_head = <META>;
 	chomp ($meta_head);
 	my @dado_head = split(/\t/, $meta_head);
@@ -407,7 +357,6 @@ while (my $pos = <POS>) {
 	
 	my %meta_haplo;
 	my $total = 0;
-
 	
 	while (my $line4 = <META>) {
 	    if ($line4 =~ m/M[0-9]{2}H[0-9]{2}/g) {
@@ -416,7 +365,7 @@ while (my $pos = <POS>) {
 		$meta_haplo{$dado_meta[1]} = $dado_meta[$n_col];
 	    }
 
-	    elsif ($line4 =~ m/\tFrequencia\t/g) {
+	    elsif ($line4 =~ m/\tFrequency\t/g) {
 		chomp($line4);
 		my @dado_meta = split(/\t/, $line4);
 		$total += $dado_meta[$n_col];
@@ -425,13 +374,11 @@ while (my $pos = <POS>) {
 	close (META);
 
 	if ($ev == 0) {
-	    print "Caso MUTACAO\n";
-	    $IP += 10**(-8);
-	    
+	    print "Case MUTATION\n";
+	    $IP += 10**(-8);    
 	}
 
 	elsif ($ev > 0) {
-
 	    my $count1 = 0;
 	    my @ab;
 	    my $haplo_b;
@@ -448,13 +395,10 @@ while (my $pos = <POS>) {
 	    } #foreach my $key1(keys(%haplo_mae)
 
 	    if ($n_h_feto == 0) {
-
 		my $a = 0;
 		my $b = 0;
 		    
 		if (($n_h_pai == 2) && ($n_h_mae == 2)) {
-
-
 		    if ($count1 == 1) {
 
 			if ($ab[0] ne $haplo_b) {
@@ -467,7 +411,6 @@ while (my $pos = <POS>) {
 			    $b = $meta_haplo{$ab[0]}/$total;		
 			}
 
-
 			if ($a == 0) {
 			    $a += 1/($total+1);
 			}
@@ -479,7 +422,7 @@ while (my $pos = <POS>) {
 			#print "A = $a\n";
 			#print "B = $b\n";
 			
-			print "Caso M=AB, C=AB, SP=AC ou M=AB, C=A, SP=AC\n";
+			print "Case M=AB, C=AB, SP=AC ou M=AB, C=A, SP=AC\n";
 
 			my $IP1 = (1/(2*$a));
 			my $IP2 = (1/(2*($a + $b)));
@@ -511,28 +454,24 @@ while (my $pos = <POS>) {
 			#print "A = $a\n";
 			#print "B = $b\n";
 			
-			print "Caso M=AB, C=AB, SP=AB ou M=AB, C=A, SP=AB\n";
+			print "Case M=AB, C=AB, SP=AB ou M=AB, C=A, SP=AB\n";
 
 			if ($a < $b) {
 			    $IP += (1/(2*$b));
-
 			}
 
 			elsif ($a == $b) {
 			    $IP += (1/($a + $b));
-
 			}
 
 			elsif ($a > $b) {
 			    $IP += (1/(2*$a));
-
 			}
-			    
 		    }
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 2)) {
-		    
+   
 		    if ($ab[0] ne $haplo_b) {
 			$a += $meta_haplo{$ab[0]}/$total;
 			$b += $meta_haplo{$ab[1]}/$total;
@@ -555,19 +494,17 @@ while (my $pos = <POS>) {
 		    #print "B = $b\n";
 		    
 		    if ($count1 == 1) {
-			print "Caso M=AB, C=AB, SP=A ou M=AB, C=A, SP=A\n";
+			print "Case M=AB, C=AB, SP=A ou M=AB, C=A, SP=A\n";
 
 			my $IP1 = (1/($a));
 			my $IP2 = (1/($a + $b));
 
 			if ($IP1 <= $IP2) {
 			    $IP += $IP1;
-
 			}
 
 			elsif ($IP1 > $IP2) {
 			    $IP += $IP2;
-
 			}
 		    }
 		}
@@ -583,9 +520,8 @@ while (my $pos = <POS>) {
 		    #print "A = $a\n";
 		    
 		    if ($count1 == 1) {
-			print "Caso M=A, C=A, SP=AB\n";
+			print "Case M=A, C=A, SP=AB\n";
 			$IP += (1/(2*$a));
-
 		    }		    
 		}
 
@@ -600,9 +536,8 @@ while (my $pos = <POS>) {
 		    #print "A = $a\n";
 		    
 		    if ($count1 == 1) {
-			print "Caso M=A, C=A, SP=A\n";
+			print "Case M=A, C=A, SP=A\n";
 			$IP += (1/$a);
-
 		    }
 		}
 		
@@ -623,56 +558,41 @@ while (my $pos = <POS>) {
 		#print "A = $a\n";
 		if (($n_h_pai == 2) && ($n_h_mae == 2)) {
 		    if ($count1 == 0) {
-			print "Caso M=BD, C=AB, SP=AC\n";
+			print "Case M=BD, C=AB, SP=AC\n";
 			$IP += (1/(2*$a));
-
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Caso M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
+			print "Case M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
 			$IP += (1/(2*$a));
-
 		    }
-
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 2)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=BC, C=AB, SP=A\n";
+			print "Case M=BC, C=AB, SP=A\n";
 			$IP += (1/$a);
-
 		    }
-		    
 		}
 
 		elsif (($n_h_pai == 2) && ($n_h_mae == 1)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=B, C=AB, SP=AC\n";
+			print "Case M=B, C=AB, SP=AC\n";
 			$IP += (1/(2*$a));
-
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Caso M=B, C=AB, SP=AB\n";
+			print "Case M=B, C=AB, SP=AB\n";
 			$IP += (1/(2*$a));
-
 		    }
-
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 1)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=B, C=AB, SP=A\n";
+			print "Case M=B, C=AB, SP=A\n";
 			$IP += (1/$a);
-
 		    }
-
-
 		}
-
 	    } #elsif ($n_h_feto == 1)
 
 	    elsif ($n_h_feto == 2) {
@@ -681,7 +601,6 @@ while (my $pos = <POS>) {
 		my $a = 0;
 		    
 		foreach my $key2(keys(%herda_pai)) {
-		    
 		    $a1 += $meta_haplo{$key2}/$total;
 		
 		    if ($a1 == 0) {
@@ -690,99 +609,77 @@ while (my $pos = <POS>) {
 
 		    if ($a1 > $a) {
 			$a = $a1;
-
 		    }
-		    
 		}
 		
 		#print "A = $a\n";
 		if (($n_h_pai == 2) && ($n_h_mae == 2)) {
 		    if ($count1 == 0) {
-			print "Caso M=BD, C=AB, SP=AC\n";
+			print "Case M=BD, C=AB, SP=AC\n";
 			$IP += (1/(2*$a));
-
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Caso M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
+			print "Case M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
 			$IP += (1/(2*$a));
-
 		    }
-
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 2)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=BC, C=AB, SP=A\n";
+			print "Case M=BC, C=AB, SP=A\n";
 			$IP += (1/$a);
-
 		    }
-		    
 		}
 
 		elsif (($n_h_pai == 2) && ($n_h_mae == 1)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=B, C=AB, SP=AC\n";
+			print "Case M=B, C=AB, SP=AC\n";
 			$IP += (1/(2*$a));
-
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Caso M=B, C=AB, SP=AB\n";
+			print "Case M=B, C=AB, SP=AB\n";
 			$IP += (1/(2*$a));
-
 		    }
-
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 1)) {
-
 		    if ($count1 == 0) {
-			print "Caso M=B, C=AB, SP=A\n";
+			print "Case M=B, C=AB, SP=A\n";
 			$IP += (1/$a);
-
 		    }
-
-
 		}
-
 	    } #elsif ($n_h_feto == 2)
 	}
 	
 	$IPC = $IPC*$IP;
 	print "IP = $IP\n";
-	
     }
-    
     print "\n";
     $M += 1;
-        
 } #while (my $pos = <POS>)
-
 
 close (POS);
 
-
 my $W = $IPC/($IPC + 1);
-print "RELATÓRIO\n";
-print "Micro-haplótipos válidos = $conta_m\n";
-print "Micro-haplótipos com FF = $tem_ff\n";
-print "Micro-haplótipo com mutação = $tem_mut\n";
+print "REPORT\n";
+print "Good microhaplotypes = $conta_m\n";
+print "Microhaplotypes with FF = $tem_ff\n";
+print "Microhaplotypes with mutation = $tem_mut\n";
 print "IPC = $IPC\n";
 print "W = $W\n";
 print "\n";
 
-print "INFORMAÇÕES DE QUALIDADE\n";
-print "Qualidade do mapeamento dos reads = Q$map\n";
+print "QUALITY INFORMATION\n";
+print "Mapping quality of reads = Q$map\n";
 print "CIGAR string = $cigar\n";
-print "Qualidade das bases = Q$qual\n";
-print "Porcentagem de bases cobertas = $por%\n";
-print "Cobertura de reads do SUPOSTO PAI e da MÃE = $cob\n";
-print "Cobertura de reads do PLASMA = $cobPL\n";
-print "População do 1000 Genomes = $Genome\n";
-print "Limite para erros de sequenciamento = $erros%\n";
-print "Limite para considerar HOMOZIGOTO = $superior%\n";
-print "Limite para considerar HETEROZIGOTO quando existem 3 ou mais = $duvida%\n";
+print "Bases quality = Q$qual\n";
+print "Percentage of covered bases = $por%\n";
+print "Coverage of ALLEGED FATHER and MOTHER = $cob\n";
+print "Coverage of PLASMA = $cobPL\n";
+print "Population from 1000 Genomes = $Genome\n";
+print "Limit for sequencing errors = $erros%\n";
+print "Limit to consider HOMOZYGOUS = $superior%\n";
+print "Limit to consider HETEROZYGOUS when ther are more than 3 possibilities = $duvida%\n";
 print "\n";
