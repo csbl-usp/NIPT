@@ -21,7 +21,7 @@ my $qual = 20;
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
 	   "m=s" => \$qual
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM)) {die "\
 This script receives two inputs, the bam file and the mapping quality. \
@@ -29,10 +29,10 @@ The outputs are two files with the sequences in bam format. \
 BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
 MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : Bam files\
-    -m : Mapping quality of reads (default = 20)\
+Parameters: \
+	-h	Show the options \
+	-b	Bam files \
+	-m	Mapping quality of reads (default = 20) \
 \n";
 }
 
@@ -46,10 +46,9 @@ my $id = $2;
 my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
-    
     chomp ($pos);
 
     #Armazenamos o cromossomo e a posição inicial e final do microhaplótipo
@@ -68,7 +67,6 @@ while (my $pos = <POS>) {
     open (OUT2, ">$nome.$chr.$ini-$fim.MAU_MAP.M$qual.tsv") or die "Failed to open MAU_MAP file! \n";
     
     while (my $line1 = <INFILE>) {
-
 	my @array = split (/\t/, $line1);
 
 	if ($array[4] >= $qual) {
@@ -78,16 +76,11 @@ while (my $pos = <POS>) {
 	else {
 	    print OUT2 $line1;
 	}
-
     } # while (my $line1 = <INFILE>)
-
 
     close (INFILE);
     close (OUT1);
     close (OUT2);
-
-   
-
 } #while (my $pos = <POS>)
 
 close (POS);
