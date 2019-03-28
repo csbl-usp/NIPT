@@ -10,9 +10,6 @@
 #2 - List of SNPs that compose the microhaplotype
 #3 - Population or super population initial or ALL
 
-#Endereços importantes (MARTIN)
-#Painel do 1000G: /home/jaque/Desktop/Scripts_Martin/Arquivos/integrated_call_samples_v3.20130502.ALL.panel
-
 ####################################################################################
 
 use strict;
@@ -28,7 +25,7 @@ GetOptions("help|h" => \$help,
 	   "m=s" => \$micro,
 	   "p=s" => \$pop,
 	   "s=s" => \$super
-) or die "Erro ao pegar as opções! \n";
+) or die "Failed to take the options! \n";
 
 if ($help || !($vcf && $micro)) {die "\
 This script requires two parameters. \
