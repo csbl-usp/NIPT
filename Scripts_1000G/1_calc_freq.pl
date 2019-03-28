@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Autora: Jaqueline Wang
-#Mestre do Programa Interunidades em Bioinformática - USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT PARA CALCULAR A FREQUENCIA DOS MICRO-HAPLÓTIPOS DOS DADOS DO 1000 GENOMES 
+#SCRIPT TO CALCULATE THE MICROHAPLOTYPE FREQUENCIES FROM 1000 GENOMES 
 
-#Devem ser passados 3 parâmetros
-#1 - Arquivo VCF
-#2 - SNPs do Micro-haplótipo
-#3 - Sigla da população ou da super-população ou TODOS
+#The script requires 3 parameters
+#1 - Vcf file
+#2 - List of SNPs that compose the microhaplotype
+#3 - Population or super population initial or ALL
 
 #Endereços importantes (MARTIN)
 #Painel do 1000G: /home/jaque/Desktop/Scripts_Martin/Arquivos/integrated_call_samples_v3.20130502.ALL.panel
@@ -20,8 +20,8 @@ use Getopt::Long;
 
 my $help = 0;
 my ($vcf, $micro);
-my $pop = "TODOS"; 
-my $super = "TODOS";
+my $pop = "ALL"; 
+my $super = "ALL";
 
 GetOptions("help|h" => \$help,
 	   "v=s" => \$vcf,
@@ -31,16 +31,16 @@ GetOptions("help|h" => \$help,
 ) or die "Erro ao pegar as opções! \n";
 
 if ($help || !($vcf && $micro)) {die "\
-$0: \
-Esse script recebe dois arquivos, um é a lista de SNPs que compõem o microhaplótipo e o outro é o vcf do 1000 Genomes. A saída é a frequência populcional dos haplótipos encontrados no 1000 Genomes. Caso deseje separar por populações ou super-populações, incluir esse parâmetro.\
+This script requires two parameters. \
+The output is the populational frequency of haplotypes in 1000 Genomes. \ 
+To separate from population or super-population, use the parameter. \
 \
-Parâmetros:\
-     -h ou --help : Mostra as opções\
-     -v : Arquivo vcf do 1000 Genomes\
-     -m : Lista com os SNPs que compõem o microhaplótipo\
-     -p : Sigla da população a ser usada ou TODOS (não usar com -s)\
-     -s : Sigla da super-população a ser usada ou TODOS (não usar com -p)\
-
+Parameters: \
+     -h	Show the options \
+     -v	Vcf file from 1000 Genomes \
+     -m	List of SNPs that compose the microhaplotype \
+     -p	Population initial or ALL (do not use with -s) \
+     -s	Super-population initial or ALL (do not use with -p) \
 \n";
 }
 
@@ -49,8 +49,8 @@ Parâmetros:\
 #Armazenamos os indivíduos que foram selecionados (tanto na superpopulação quanto na população
 my @sample;
 
-if (($pop eq "TODOS") && ($super eq "TODOS") ){
-    open (PAINEL, "/home/jaque/Desktop/Scripts_Martin/Arquivos/integrated_call_samples_v3.20130502.ALL.panel") or die "Não foi possível abrir o painel";
+if (($pop eq "ALL") && ($super eq "ALL") ){
+    open (PAINEL, "Files/integrated_call_samples_v3.20130502.ALL.panel") or die "Failed to open PANEL file! \n";
     <PAINEL>;
 
     while (my $linha = <PAINEL>){
@@ -60,8 +60,8 @@ if (($pop eq "TODOS") && ($super eq "TODOS") ){
     close (PAINEL);
 }#if
 
-elsif (($pop =~ m/[A-Z]{3}/) && ($super eq "TODOS")){
-    open (PAINEL, "/home/jaque/Desktop/Scripts_Martin/Arquivos/integrated_call_samples_v3.20130502.ALL.panel") or die "Não foi possível abrir o painel";
+elsif (($pop =~ m/[A-Z]{3}/) && ($super eq "ALL")){
+    open (PAINEL, "Files/integrated_call_samples_v3.20130502.ALL.panel") or die "Failed to open PANEL file! \n";
     <PAINEL>;
     while (my $linha = <PAINEL>){
 	my @array = split(/\t/, $linha);
@@ -74,8 +74,8 @@ elsif (($pop =~ m/[A-Z]{3}/) && ($super eq "TODOS")){
     close (PAINEL)
 }#if
 
-elsif (($super =~ m/[A-Z]{3}/) && ($pop eq "TODOS")){
-    open (PAINEL, "/home/jaque/Desktop/Scripts_Martin/Arquivos/integrated_call_samples_v3.20130502.ALL.panel") or die "Não foi possível abrir o painel";
+elsif (($super =~ m/[A-Z]{3}/) && ($pop eq "ALL")){
+    open (PAINEL, "Files/integrated_call_samples_v3.20130502.ALL.panel") or die "Failed to open PANEL file! \n";
     <PAINEL>;
     while (my $linha = <PAINEL>){
 	my @array = split(/\t/, $linha);
@@ -90,7 +90,7 @@ elsif (($super =~ m/[A-Z]{3}/) && ($pop eq "TODOS")){
 
 
 #Abrimos o arquivo com a lista de SNPs do micro-haplótipo
-open (SNPS, "$micro") or die "Não foi possível abrir o arquivo de snps!\n";
+open (SNPS, "$micro") or die "Failed to open MICRO file! \n";
 
 my @snps;
 while (my $entrada = <SNPS>){
@@ -114,7 +114,7 @@ my @ref;
 my @alt;
 my @id_snp;
 
-open (TEXT, "$vcf") or die "Não foi possível abrir o arquivo $vcf!\n";
+open (TEXT, "$vcf") or die "Failed to open $vcf! \n";
 my @armaz;
 while (my $line = <TEXT>){
     chomp ($line);
@@ -166,16 +166,13 @@ while (my $line = <TEXT>){
 }#while	
 close (TEXT);
 
-
-
 #Calculamos as frequencias dos microhaplótipos dos indivíduos de acordo com as populações e super-populações selecionadas
-
 my %haplotipo;
 my $total = 0;
+
 foreach my $comp(@sample){
     my $count = 0;
     while ($count < 2504){
-
 	my @array1;
 	my @array2;
 
@@ -262,9 +259,6 @@ foreach my $comp(@sample){
 
 	}#else
 
-
- 
-
 	if (($array1[0] ne "Nada") && ($array2[0] ne "Nada")){
 	    my $haplo1 = join ("", @array1);
 	    my $haplo2 = join ("", @array2);
@@ -308,6 +302,3 @@ foreach my $key(keys(%haplotipo)){
     #print "$key\n";
     
 }#foreach
-
-
-
