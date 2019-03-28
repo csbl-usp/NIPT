@@ -65,7 +65,7 @@ This script receives the parameters to analyze the sample data (alleged father, 
 The output are the sample genotypes and a quality report for the data. \
 \
 Parameters: \
-	-h Show the options \
+	-h	Show the options \
 	-b	BAM file \
 	-m	Mapping quality of reads (default = 20) \
 	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
