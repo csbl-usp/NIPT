@@ -26,13 +26,13 @@ GetOptions("help|h" => \$help,
 ) or die "Failed to take the options! \n";
 
 if ($help || !($vcf && $micro && $num)) {die "\
-This script requires the following three parameters. \
+This script creates a meta file for the microhaplotype and requires the following three parameters. \
 \
 Parameters: \
-     -h	Show the options \
-     -v	Vcf file from 1000 Genomes \
-     -m	List of SNPs that compose the microhaplotype \
-     -n	Microhaplotype number \
+	-h	Show the options \
+	-v	Vcf file from 1000 Genomes \
+	-m	List of SNPs that compose the microhaplotype \
+	-n	Microhaplotype number \
 \n";
 }
 
