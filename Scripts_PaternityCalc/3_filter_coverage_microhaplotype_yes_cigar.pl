@@ -27,19 +27,22 @@ GetOptions("help|h" => \$help,
 	   "m=s" => \$map,
 	   "t=s" => \$trio,
 	   "a=s" => \$amostra
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM && $trio && $amostra)) {die "\
-This script receives four inputs, the bam file, the trio number, the sample type and the mapping quality. \
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
 The outputs are two files. \
 	TODOS_SNPS - contain reads with ALL the SNPs covered. \
 	PARTE_SNPS - contain reads with PART of the SNPs covered. \
 \
-Parameters: \
-	-h	Show the options \
+Required parameters: \
 	-b	Bam file \
-	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
 	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
+\
+Other parameters: \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
 \n";
 }
