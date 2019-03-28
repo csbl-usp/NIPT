@@ -72,8 +72,8 @@ Parameters: \
 	-l	Use or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
 	-p	Percentage of covered bases (default = 70) \
-	-c	Coveraged reads of ALLEGED FATHER and MOTHER (default = 20) \
-	-f	Coveraged reads of PLASMA (default = 1000) \
+	-c	Coverage of ALLEGED FATHER and MOTHER (default = 20) \
+	-f	Coverage of PLASMA (default = 1000) \
 	-g	Population of 1000 Genomes (default = ALL) \
 	-e	Limit for sequencing errors (default = 10) \
 	-s	Limit to consider HOMOZYGOUS (default = 80) \
