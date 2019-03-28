@@ -5,9 +5,11 @@
 
 #SCRIPT TO SEPARATE READ WITH GOOD MAPPING
 
-#The program receives 2 parameters:
+#The program receives 4 parameters:
 #1 - Bam file
 #2 - Mapping quality
+#3 - Trio number
+#4 - Sample type
 
 ####################################################################################
 
@@ -17,33 +19,34 @@ use Getopt::Long;
 my $help = 0;
 my $BAM;
 my $qual = 20;
+my $amostra;
+my $trio;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
-	   "m=s" => \$qual
+	   "m=s" => \$qual,
+	   "t=s" => \$trio,
+	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives two inputs, the bam file and the mapping quality. \
+if ($help || !($BAM && $trio && $amostra)) {die "\
+This script receives four inputs, the bam file, the mapping quality, the trio number and the sample type. \
 The outputs are two files with the sequences in bam format. \
-BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
-MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
+	BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
+	MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
 \
 Parameters: \
 	-h	Show the options \
 	-b	Bam files \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
+	-t	Trio number \
 	-m	Mapping quality of reads (default = 20) \
 \n";
 }
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
