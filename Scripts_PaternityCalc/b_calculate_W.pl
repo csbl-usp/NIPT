@@ -5,7 +5,7 @@
 
 #SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING THE FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#The script receives 8 parameters
+#The script receives 9 parameters
 #1 - Plasma bam file
 #2 - Mapping quality
 #3 - YesCIGAR or NotCIGAR
@@ -14,6 +14,7 @@
 #6 - Coverage of alleged father and mother regions
 #7 - Coverage of plasma regions
 #8 - Population from 1000 Genomes
+#9 - Trio number
 
 #Inbalance parameters
 #1 - Superior
@@ -37,6 +38,7 @@ my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
 my $Genome = "ALL";
+my $trio;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
@@ -49,24 +51,30 @@ GetOptions("help|h" => \$help,
 	   "e=s" => \$erros,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
-	   "g=s" => \$Genome
+	   "g=s" => \$Genome,
+	   "t=s" => \$trio
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives the parameters to analyze the data and the plasma minimum coverage.\
-The outputs are the genotypes for alleged father, mother and plasma.\
-For each microhaplotype, the EV is obtained, then, the PI and W are calculated. \
+if ($help || !($BAM && $trio)) {die "\
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
+The outputs is the probability of paternity and a report. \
 \
-Parameters:\
-	-h	Show the options \
+Required parameters:\
 	-b	Plasma bam file \
+	-t	Trio number \
+\
+Other parameters: \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
-	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
+	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
 	-p	Percentage of covered bases (default = 70) \
 	-c	Coverage of alleged father and mother (default = 20) \
 	-f	Coverage of plasma (default = 1000) \
 	-g	Population from 1000 Genomes (default = ALL) \
+\
+Inbalance parameters: \
 	-e	Limit for sequencing errors (default = 10) \
 	-s	Limit to consider HOMOZYGOUS (default = 80) \
 	-d	Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35) \
@@ -75,11 +83,7 @@ Parameters:\
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_SampleP";
 
 my $IPC = 1;
 my $conta_m = 0;
