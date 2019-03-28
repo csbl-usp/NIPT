@@ -5,13 +5,15 @@
 
 #SCRIPT TO EXTRACT THE GENOTYPES OF ALLEGED FATHER AND MOTHER FOR EACH MICROHAPLOTYPE
 
-#The script receives 6 parameters
+#The script receives 8 parameters
 #1 - Bam file
 #2 - Mapping quality
 #3 - YesCIGAR or NotCIGAR
 #4 - Bases quality
 #5 - Percentage of covered bases
 #6 - Regions coverage
+#7 - Trio number
+#8 - Sample type
 
 #Inbalance parameters
 #1 - Superior
@@ -33,6 +35,8 @@ my $cob = 20;
 my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
+my $trio;
+my $amostra;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
@@ -43,36 +47,39 @@ GetOptions("help|h" => \$help,
 	   "c=s" => \$cob,
 	   "e=s" => \$erros,
 	   "s=s" => \$superior,
-	   "d=s" => \$duvida
-    ) or die "Erro ao pegar as opções! \n";
+	   "d=s" => \$duvida,
+	   "t=s" => \$trio,
+	   "a=s" => \$amostra
+    ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives six inputs: bam file, mapping quality, YesCIGAR or NotCIGAR, base quality, percentage of covered bases and coverage. \
-The outputs are the genotypes of each microhaplotype analyzed.\
+if ($help || !($BAM && $trio && $amostra)) {die "\
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
+The output is the genotype of each microhaplotype analyzed.\
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : Bam file\
-    -m : Mapping quality of reads (default = 20)\
-    -l : Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
-    -c : Coverage (default = 20)\
+Required parameters: \
+	-b	Bam file \
+	-t	Trio number \
+	-a	Type of sample AF (alleged father) or M (mother) \
+\
+Other parameters: \
+	-h 	Show the options \
+	-m	Mapping quality of reads (default = 20) \
+	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
+	-c	Coverage (default = 20) \
 \
 Inbalance parameters:
-    -e : Limit for sequencing errors (default = 10)\
-    -s : Limit to consider HOMOZYGOUS (default = 80)\
-    -d : Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
+	-e	Limit for sequencing errors (default = 10)\
+	-s	Limit to consider HOMOZYGOUS (default = 80)\
+	-d	Limit to consider HETEROZYGOUS when ther are more than 3 possibilities (default = 35)\
 \n";
 }
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 open (POS, "Files/microhaplotipos.txt") or die "Failed to obtain the microhaplotypes! \n";
@@ -104,7 +111,6 @@ while (my $pos = <POS>) {
 	    $porcentagem{$dados[1]} = $dados[3];
 	    $cobertura{$dados[1]} = $dados[2];
 	}
-
     }
     
     close (INFILE);
@@ -130,29 +136,23 @@ while (my $pos = <POS>) {
 	
 	foreach my $key2(keys(%porcentagem)) {
 	    
-	    if (($porcentagem{$key2} > $superior) && ($cobertura{$key2} >= $cob)) {
-		
+	    if (($porcentagem{$key2} > $superior) && ($cobertura{$key2} >= $cob)) {		
 		my $num = sprintf "%.2f", $porcentagem{$key2};
 		my $string = "$key2\t$num%\t$cobertura{$key2}X\n";
 		push @haplos, $string;
 	    }
-
 	}
 	
 	if (scalar @haplos == 1) {
 	    print "\t";
-	    print "Homozigoto\n";
+	    print "Homozygous\n";
 	    print @haplos;
 	}
 
 	else {
 	    print "\n";
-	    print "Qualidade baixa! \n";
-
-
+	    print "Low quality! \n";
 	}
-
-
     }
 
     elsif ($count80 == 0) {
@@ -170,13 +170,13 @@ while (my $pos = <POS>) {
 
 	    if (scalar @haplos == 2) {
 		print "\t";
-		print "Heterozigoto\n";
+		print "Heterozygous\n";
 		print @haplos;
 	    }
 
 	    else {
 		print "\n";
-		print "Qualidade baixa! \n";
+		print "Low quality! \n";
 	    }
 	}
 
@@ -193,33 +193,28 @@ while (my $pos = <POS>) {
 
 	    if (scalar @haplos == 2) {
 		print "\t";
-		print "Heterozigoto\n";
+		print "Heterozygous\n";
 		print @haplos;
 	    }
 
 	    else {
 		print "\n";
-		print "Qualidade baixa! \n";
+		print "Low quality! \n";
 	    }
 	}
 
 	elsif ($count10 == 1) {
 	    print "\n";
-	    print "Qualidade baixa! \n";
+	    print "Low quality! \n";
 	}
 
 	elsif ($count10 == 0) {
 	    print "\n";
-	    print "Qualidade baixa! Não detectou haplotipos \n";
+	    print "Low quality! No haplotypes. \n";
 	}
     }
-
-
     print "\n";
-    
 } #while (my $pos = <POS>)
-
-
 
 close (POS);
 
