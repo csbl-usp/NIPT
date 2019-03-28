@@ -19,8 +19,8 @@ if ($help || !($num)) {die "\
 This script receives one parameter. \
 \
 Parameter: \
-     -h	Show the options \
-     -n	Microhaplotype number \
+	-h	Show the options \
+	-n	Microhaplotype number \
 \n";
 }
 
@@ -38,14 +38,12 @@ open (OUT, ">M$num.meta_file.txt") or die "Failed to open META FILE! \n";
 #Abrimos o arquivo TODOS porque ele contém todos os haplótipos
 open (TODOS, "1000G_test/Freq_haplo/M$num/M$num.ALL.freq.txt") or die "Failed o open ALL file! \n";
 
-
 my $head = <TODOS>;
 my $tot1 = 0;
 
 while (my $line = <TODOS>) {	    
     chomp ($line);
     my ($hap, $freq) = split(/\t/, $line);
-    
     $haplos{$hap} = $freq;
     $tot1 = $tot1 + $freq;
 }
@@ -81,16 +79,12 @@ while (my $line1 = <POP>) {
 	
 	if (exists($hash{$key})) {
 	    $haplos{$key} = $haplos{$key}."\t".$hash{$key};
-
 	}
 
 	elsif (!exists($hash{$key})) {
 	    $haplos{$key} = $haplos{$key}."\t0";
-
 	}
-
     }
-
 }
 
 close (POP);
