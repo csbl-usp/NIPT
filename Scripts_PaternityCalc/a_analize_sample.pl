@@ -16,7 +16,7 @@
 #7_make_report.pl
 
 
-#The program receives 7 parameters:
+#The program requires 7 parameters:
 #1 - Bam file
 #2 - Mapping quality
 #3 - YesCIGAR ou NotCIGAR
@@ -58,24 +58,24 @@ GetOptions("help|h" => \$help,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
 	   "a=s" => \$amostra
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM && $amostra)) {die "\
 This script receives the parameters to analyze the sample data (alleged father, mother or plasma). \
 The output are the sample genotypes and a quality report for the data. \
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : BAM file\
-    -m : Mapping quality of reads (default = 20)\
-    -l : YesCIGAR or NotCIGAR (default = NotCIGAR)
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
-    -c : Coveraged reads (default = 20)\
-    -a : Type of sample AF (alleged father), M (mother) ou P (plasma)\
-    -e : Limit for sequencing errors (default = 10)\
-    -s : Limit to consider HOMOZYGOUS (default = 80)\
-    -d : Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35)\
+Parameters: \
+	-h Show the options \
+	-b	BAM file \
+	-m	Mapping quality of reads (default = 20) \
+	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
+	-c	Coveraged reads (default = 20) \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
+	-e	Limit for sequencing errors (default = 10) \
+	-s	Limit to consider HOMOZYGOUS (default = 80) \
+	-d	Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35) \
 \n";
 }
 
@@ -96,16 +96,13 @@ system ("Scripts_PaternityCalc/2_filter_mapping.pl -b $BAM -m $map");
 
 if ($cigar eq "NotCIGAR") {
     system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_not_cigar.pl -b $BAM -m $map");
-
 }
 
 elsif ($cigar eq "YesCIGAR") {
     system ("Scripts_PaternityCalc/3_filter_coverage_microhaplotype_yes_cigar.pl -b $BAM -m $map");
-
 }
     
 system ("Scripts_PaternityCalc/4_filter_base_quality.pl -b $BAM -m $map -l $cigar -q $qual -p $por");
-
    
 system ("Scripts_PaternityCalc/5_haplotype_freq_micro.pl -b $BAM -m $map -l $cigar -q $qual -p $por");
 
@@ -115,7 +112,6 @@ system ("mv $nome.* $nome");
 
 if (($amostra eq "AF") || ($amostra eq "M")) {
     system ("Scripts_PaternityCalc/6_extract_genotype.pl -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -e $erros -s $superior -d $duvida > $nome_genotipo");
-
 }
 
 system("Scripts_PaternityCalc/7_make_report.pl -b $BAM -m $map -l $cigar -q $qual -p $por -c $cob -a $amostra -e $erros -s $superior -d $duvida > $nome_report");
