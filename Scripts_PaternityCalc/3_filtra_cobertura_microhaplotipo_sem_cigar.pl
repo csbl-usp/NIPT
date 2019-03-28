@@ -29,10 +29,10 @@ CIGAR_RUIM - contain read where the CIGAR shows insertions, deletions, etc. \
 TODOS_SNPS - contain reads with ALL the SNPs covered. \
 PARTE_SNPS - contain reads with PART of the SNPs covered. \
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : Bam file\
-    -m : Mapping quality of reads (default = 20)\
+Parameters: \
+	-h	Show the options \
+	-b	Bam file \
+	-m	Mapping quality of reads (default = 20) \
 \n";
 }
 
@@ -47,7 +47,7 @@ my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 
-open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
     
@@ -75,8 +75,6 @@ while (my $pos = <POS>) {
 	    push @SNP_id, $info[3];
 	    $n_snp += 1;
 	} #if (($info[0] eq $chr) && ($info[1] >= $ini) && ($info[1] <= $fim))
-
-
     } #while (my $line1 = <BED>)
 
     close (BED);
@@ -112,7 +110,6 @@ while (my $pos = <POS>) {
 	}
 
 	else {
-	    
 	    $cigar =~ m/([0-9]*)M/g;
 	    my $number = $1;
 	    my $seq2 = substr ($seq,$pos1,$number);
@@ -121,8 +118,6 @@ while (my $pos = <POS>) {
 	    $qual1 = $qual1.$qual2;
 	    $pos1 = $pos1 + $number;
 	   
- 
-
 	    my @hapl_seq;
 	    my @hapl_qual;
 	    my @hapl_snp;
@@ -149,8 +144,7 @@ while (my $pos = <POS>) {
 		} #if ($snp_pos >= $pos0)
 		
 		elsif ($snp_pos < $pos0) {
-		    $count1 = $count1 + 1;
-		    
+		    $count1 = $count1 + 1;	    
 		} #elsif ($snp_pos < $pos0)
 		
 	    } #foreach my $snp_pos(@SNP_pos)
@@ -160,21 +154,14 @@ while (my $pos = <POS>) {
 	    my $haplo3 = join(" ", @hapl_snp);
 	    
 	    if ($count2 == $n_snp) {
-		
 		my $teste = join ("\t", $haplo1, $haplo2);
 		push @haplo_bom, $teste;
-
-		
 	    } #if (length($haplo1) == %n_snp
 	    
 	    if ($count2 != $n_snp) {
-		
 		my $teste = join ("\t", $haplo1, $haplo2, $haplo3);
 		push @haplo_ruim, $teste;
-		
-		
 	    } #if (length($haplo1) != $n_snp)
-
 	}
     } #while (my $line = <INFILE>)
 
@@ -186,7 +173,6 @@ while (my $pos = <POS>) {
 
     foreach my $g_string(@haplo_bom) {
 	print OUTBOM $g_string, "\n";
-	
     } #foreach my $g_string(@haplo_bom)
 
     close (OUTBOM);
@@ -195,14 +181,11 @@ while (my $pos = <POS>) {
     open (OUTRUIM, ">$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.NotCIGAR.tsv") or die "Failed to open TODOS_SNPS file! \n";
 
     foreach my $b_string(@haplo_ruim) {
-
 	print OUTRUIM $b_string, "\n";
-
     } #foreach my $b_string(@haplo_ruim)
 
     close (OUTRUIM);
     #print "$cont_ruim\n\n"
-
 } #while (my $pos = <POS>)
 
 close (POS);
