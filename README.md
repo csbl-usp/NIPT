@@ -2,17 +2,19 @@
 
 ### Scripts to calculate the probability of paternity using NGS data of mother, plasma and alleged father
 
-**1. To calculate the probability of paternity**
+**1. To start**
 
-  - Go to the directory where the mother, the plasma and the alleged father's BAM files are located.
+  - Download the NIPT package.
   
-  - Call the script Paternity_Calc.pl 
+  - Using the terminal, change the files permissions with the following command.
     ```
-    Paternity_Calc.pl -X BAM_alleged_father -Y BAM_mother -Z BAM_plasma
+    chmod 755 -R NIPT_master
     ```
   
-  - We settled the default parameters, but it can be changed.
-
+  - Download the Samtools package from **link to version 1.3.1**.
+  
+  - Put the Samtools package inside the NIPT folder.
+  
 
 **2. To include a new microhaplotype for analisys**
   
@@ -41,3 +43,17 @@
   - There is a file named **Microhaplotypes.txt** inside the folder **Files**. Add a line in the file with chromosome, start position and end position (chr4:7447228-7447353).
   
   - There is a file named **SNPs.bed** inside the folder **Files**. Put the SNPs that compose the microhaplotype in bed format (7 columns).
+
+
+**3. To calculate the probability of paternity**
+
+  - Go to the directory where the mother, the plasma and the alleged father's BAM files are located.
+  
+  - Call the script Paternity_Calc.pl 
+    ```
+    Paternity_Calc.pl -X BAM_alleged_father -Y BAM_mother -Z BAM_plasma
+    ```
+  
+  - We settled the default parameters, but it can be changed.
+
+
