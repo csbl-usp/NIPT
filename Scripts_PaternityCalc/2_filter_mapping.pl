@@ -30,16 +30,19 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM && $trio && $amostra)) {die "\
-This script receives four inputs, the bam file, the mapping quality, the trio number and the sample type. \
-The outputs are two files with the sequences in bam format. \
+TThis script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
+The outputs are two files. \
 	BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
 	MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
 \
-Parameters: \
-	-h	Show the options \
+Required parameters: \
 	-b	Bam files \
-	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
+\
+Other parameters: \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
 \n";
 }
