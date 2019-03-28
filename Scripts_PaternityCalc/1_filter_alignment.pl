@@ -8,8 +8,6 @@
 #The program receives 1 parmeter:
 #1 - Bam file
 
-#Samtools: /home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools
-
 ####################################################################################
 
 use strict;
@@ -20,16 +18,16 @@ my $BAM;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM
-    ) or die "Erro ao pegar as opções! \n";
+    ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM)) {die "\
 This script receives the bam file. The outputs are two files with sequences in bam format. \
 BOM_ALN - contain reads aligned only in ONE region. \
 MAU_ALN - contain reads aligned in more than ONE region. \
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : Bam file\
+Parameters: \
+	-h	Show the options \
+	-b	Bam file \
 \n";
 }
 
@@ -44,10 +42,10 @@ my $data = $3;
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
  
-open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 #Indexamos o BAM para poder visualizar os dados
-system ("/home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools index $BAM");
+system ("Samtools/samtools-1.3.1/samtools index $BAM");
 
 while (my $pos = <POS>){
 
@@ -60,7 +58,7 @@ while (my $pos = <POS>){
     my $fim = $3;
 
     #Extraímos as informações do BAM e colocar em um arquivo TSV
-    system ("/home/jaque/Desktop/Scripts_Martin/Samtools/samtools-1.3.1/samtools view $BAM $pos > $nome.$chr.$ini-$fim.tsv");
+    system ("Samtools/samtools-1.3.1/samtools view $BAM $pos > $nome.$chr.$ini-$fim.tsv");
 
     #Abrimos o aquivo TSV e extraímos as informações das regiões analisadas
     open (TSV, "$nome.$chr.$ini-$fim.tsv") or die "Failed to open TSV file! \n";
@@ -72,25 +70,21 @@ while (my $pos = <POS>){
     open (OUT2, ">$nome.$chr.$ini-$fim.MAU_ALN.tsv") or die "Failed to open OUT2 file! \n";
 
     while (my $line = <TSV>){
-
 	my @array = split (/\t/, $line);
     
 	if ((($array[1] == 16) || ($array[1] == 0))) {
-	    
 	    print OUT1 $line;
 	} 
 
 	else {
 	    print OUT2 $line;
 	}
-	
     } #while (my $line = <TSV>)
 
     close (TSV);
     close (OUT1);
     close (OUT2);
     system ("rm $nome.$chr.$ini-$fim.tsv");
-    
 } #while (my $pos = <POS>)
 
 close (POS);
