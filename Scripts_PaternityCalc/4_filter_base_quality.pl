@@ -46,12 +46,12 @@ The outputs are two files. \
 	LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
 \
 Required parameters: \
-	-h	Mostra as opções \
 	-b	Bam file \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 \
 Other parameters: \
+	-h	Mostra as opções \
 	-m	Mapping quality of reads (default = 20) \
 	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
