@@ -5,7 +5,7 @@
 
 #SCRIPT TO EXTRACT THE READS QUALITY THAT PASSED THE QUALITY CONTROL
 
-#The script receives 7 parameters
+#The script receives 8 parameters
 #1 - Bam file
 #2 - Mapping quality
 #3 - YesCIGAR or NotCIGAR
@@ -13,6 +13,7 @@
 #5 - Percentage of covered bases
 #6 - Coverage of regions
 #7 - Sample type
+#8 - Trio number
 
 #Inbalance parameters
 #1 - Superior
@@ -35,6 +36,7 @@ my $erros = 10;
 my $superior = 80;
 my $duvida = 35;
 my $amostra;
+my $trio;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
@@ -46,34 +48,38 @@ GetOptions("help|h" => \$help,
 	   "e=s" => \$erros,
 	   "s=s" => \$superior,
 	   "d=s" => \$duvida,
-	   "a=s" => \$amostra
-    ) or die "Erro ao pegar as opções! \n";
+	   "a=s" => \$amostra,
+	   "t=s" => \$trio
+    ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $amostra)) {die "\
-This script receives the parameters used for analysis and make a REPORT with the number of reads thas passes each quality step.\
+if ($help || !($BAM && $amostra && $trio)) {die "\
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
+The output is a REPORT with the number of reads thas passes each quality step.\
 \
-Parameters:\
-    -h ou --help : Show the options\
-    -b : Bam file
-    -m : Mapping quality of read (default = 20)\
-    -l : YesCIGAR or NotCIGAR (default = NotCIGAR) \
-    -q : Bases quality (default = 20)\
-    -p : Percentage of covered bases (default = 70)\
-    -c : Coverage (default = 20)\
-    -a : Type of sample AF (alleged father), M (mother) or P (plasma)\
-    -e : Limit for sequencing errors (default = 10)\
-    -s : Limit to consider HOMOZYGOUS (default = 80)\
-    -d : Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35)\
+Required parameters: \
+	-b	Bam file \
+	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) or P (plasma) \
+\
+Other parameters: \
+	-h	Show the options \
+	-m	Mapping quality of read (default = 20) \
+	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
+	-q	Bases quality (default = 20) \
+	-p	Percentage of covered bases (default = 70) \
+	-c	Coverage (default = 20) \
+\
+Inbalance parameters: \
+	-e	Limit for sequencing errors (default = 10) \
+	-s	Limit to consider HOMOZYGOUS (default = 80) \
+	-d	Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35) \
 \n";
 }
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
 open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
@@ -106,7 +112,7 @@ while (my $pos = <POS>) {
     
     system("wc $nome/$nome.BOM_MAP.M$map/$nome.$chr.$ini-$fim.BOM_MAP.M$map.tsv >> report_$micro"); 
 
-    if ($cigar eq "SemCIGAR") {
+    if ($cigar eq "NotCIGAR") {
 	system("wc $nome/$nome.CIGAR_RUIM.M$map.$cigar/$nome.$chr.$ini-$fim.CIGAR_RUIM.M$map.$cigar.tsv >> report_$micro");
     }
     
@@ -126,7 +132,7 @@ close (POS);
 
 
 my @PAIRING;
-open (POS, "Files/microhaplotypes.txt") or die "Não foi possível obter os micro-haplótipos! \n";
+open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
 
@@ -136,7 +142,7 @@ while (my $pos = <POS>) {
 
     while (my $line1 = <HAPLO>) {
 	chomp ($line1);
-	if ($line1 =~ m/$pos\tDescart/g) {
+	if ($line1 =~ m/$pos\tDiscard/g) {
 	    my @dados = split(/\t/, $line1);
 	    push @PAIRING, $dados[2];
 	}
