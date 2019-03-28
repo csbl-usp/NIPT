@@ -1,6 +1,6 @@
 # Samtools
 
-**1.Download the Samtools package**
+**1. Download the Samtools package**
 
   - Download the Samtools package, version 1.3.1.
     ```
