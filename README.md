@@ -11,10 +11,10 @@
     chmod 755 -R NIPT_master
     ```
   
-  - Download the Samtools package from **link to version 1.3.1**.
+  - Download the Samtools package, versions 1.3.1 (https://sourceforge.net/projects/samtools/files/samtools/1.3.1/).
   
-  - Put the Samtools package inside the NIPT folder.
-  
+  - Unzip the Samtools package and put inside the Samtools folder.
+    
 
 **2. To include a new microhaplotype for analisys**
   
