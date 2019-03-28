@@ -51,7 +51,7 @@ Required parameters: \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 \
 Other parameters: \
-	-h	Mostra as opções \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
 	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
