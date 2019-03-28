@@ -23,16 +23,16 @@ GetOptions("help|h" => \$help,
 	   "v=s" => \$vcf,
 	   "m=s" => \$micro,
 	   "n=s" => \$num,
-) or die "Erro ao pegar as opções! \n";
+) or die "Failed to take the options! \n";
 
 if ($help || !($vcf && $micro && $num)) {die "\
 This script requires the following three parameters. \
 \
-Parameters:\
-     -h ou --help : Show the options \
-     -v : Vcf file from 1000 Genomes \
-     -m : List of SNPs that compose the microhaplotype \
-     -n : Microhaplotype number \
+Parameters: \
+     -h	Show the options \
+     -v	Vcf file from 1000 Genomes \
+     -m	List of SNPs that compose the microhaplotype \
+     -n	Microhaplotype number \
 \n";
 }
 
