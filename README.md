@@ -23,20 +23,20 @@
       4.7447228-7447353.ALL.chr4.phase3_shapeit2_mvncall_integrated_v5a.20130502.genotypes.vcf
       ```
   
-  - Put the microhaplotype's list of SNPs in the folder **MICRO**. Example of SNPs' list name:
+  - Put the microhaplotype's list of SNPs in the folder **MICRO**. Example of list name:
       ```
-      lista4.7447228-7447353
+      list4.7447228-7447353
       ```
   
-  - Call the script 1000G.pl
+  - Call the script 1000G.pl (inside the NIPT folder).
   ```
-  1000G.pl -v VCF/vcf_name -m MICRO/list_name -n microhaplotype_number
+  ./1000G.pl -v 1000G_test/VCF/vcf_name -m 1000G_test/MICRO/list_name -n microhaplotype_number
   ```
   
   - The output is a file named MXX_meta_file.txt (where XX = microhaplotype_number).
   
   - Put the file MXX_meta_file.txt in the folder **Haplotypes**
   
-  - Create a file named **microhaplotypes.txt** inside  the folder **Files**. Add a line in the file with chromosome, start position anb end position (chr4:7447228-7447353).
+  - There is a file named **microhaplotypes.txt** inside the folder **Files**. Add a line in the file with chromosome, start position and end position (chr4:7447228-7447353).
   
-  - Create a file named **SNPs.bed** and put the SNPs that compose the microhaplotype in bed format (7 columns).
+  - There is a file named **SNPs.bed** inside the folder **Files**. Put the SNPs that compose the microhaplotype in bed format (7 columns).
