@@ -5,12 +5,14 @@
 
 #SCRIPT TO EXTRACT THE HAPLOTYPES FROM THE READS WITH GOOD MAPPING AND COVERING ALL THE SNPS WITHIN THE MICROHAPLOTYPE 
 
-#The script receives 5 parameters
+#The script receives 7 parameters
 #1 - Bam file
 #2 - Mapping quality
 #3 - YesCIGAR or NotCIGAR
 #4 - Bases quality
 #5 - Percentage of covered bases
+#6 - Trio number
+#7 - Sample type
 
 ####################################################################################
 
@@ -23,24 +25,33 @@ my $map = 20;
 my $cigar = "NotCIGAR";
 my $score = 20;
 my $por = 70;
+my $trio;
+my $amostra;
 
 GetOptions("help|h" => \$help,
 	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$score,
-	   "p=s" => \$por
+	   "p=s" => \$por,
+	   "t=s" => \$trio,
+	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM)) {die "\
-This script receives five inputs, the bam file, the mapping quality, with or without CIGAR, bases quality and percentage of covered bases.
+if ($help || !($BAM && $trio && $amostra)) {die "\
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
 The outputs are two files. \
-MORE_XX - contém os haplótipos com mais de XX% de bases cobertas. \
-LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
+	MORE_XX - contém os haplótipos com mais de XX% de bases cobertas. \
+	LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
 \
-Parameters: \
+Required parameters: \
 	-h	Mostra as opções \
 	-b	Bam file \
+	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
+\
+Other parameters: \
 	-m	Mapping quality of reads (default = 20) \
 	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
@@ -50,12 +61,7 @@ Parameters: \
 
 ####################################################################################
 
-#Usamos esse match para armazenar o início do nome de cada arquivo
-$BAM =~ m/(IonXpress[\._]{1}([0-9]{3}))[\._]{1}R[\._]{1}([0-9]{4}_[0-9]{2}_[0-9]{2})((.)*).bam/;
-
-my $nome = $1;
-my $id = $2;
-my $data = $3;
+my $nome = "Trio$trio"."_Sample$amostra";
 
 my %qualidade;
 open (QUAL, "Files/phred.txt") or die "Failed to open file with bases quality library! \n";
