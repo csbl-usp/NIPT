@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
-## Autora: Jaqueline Wang
-## Mestranda do programa Interunidades em Bioinformática da USP
+#Author: Jaqueline Wang
+#MsC in Bioinformatics Graduate Program - USP
 
-## Esse script serve para criar os arquivos de saída para cada microhaplotipo e cada populacao possivel
+#SCRIPT TO CREATE THE META FILE WITH ALL THE POPULATIONS
 
 use strict;
 use Getopt::Long;
@@ -13,32 +13,30 @@ my $num = 0;
 
 GetOptions("help|h" => \$help,
 	   "n=s" => \$num,
-) or die "Erro ao pegar as opções! \n";
+) or die "Failed to take the options! \n";
 
 if ($help || !($num)) {die "\
-$0: \
-    Esse script recebe três arquivos, um é a lista de SNPs que compõem o microhaplótipo, o segundo é o vcf do 1000 Genomes e o terceiro é o número do micro-haplótipo.\
+This script receives one parameter. \
 \
-Parâmetros:\
-     -h ou --help : Mostra as opções.\
-     -n : numero do micro-haplótipo.\
-
+Parameter: \
+     -h	Show the options \
+     -n	Microhaplotype number \
 \n";
 }
 
 my %haplos;
-my $title = "Haplotipo\tTODOS";
-my $total = "Frequencia";
+my $title = "Haplotype\tALL";
+my $total = "Frequency";
 
-open (POP, "/home/jaque/Desktop/Scripts_Martin/Arquivos/lista_pop.txt") or die "Não foi possível abrir o arquivo de lista de populacoes! \n";
+open (POP, "Files/pop_list.txt") or die "Failed to open POP_LIST file! \n";
 
-open (OUT, ">M$num.meta_file.txt") or die "Não foi possível abrir o arquivo de saída! \n";
+open (OUT, ">M$num.meta_file.txt") or die "Failed to open META FILE! \n";
 
 #Eliminamos a linha do TODOS!
 <POP>;
 
 #Abrimos o arquivo TODOS porque ele contém todos os haplótipos
-open (TODOS, "Freq_haplotipo/M$num/M$num.TODOS.freq.txt") or die "Não foi possível abrir o arquivo TODOS! \n";
+open (TODOS, "1000G_test/Freq_haplo/M$num/M$num.ALL.freq.txt") or die "Failed o open ALL file! \n";
 
 
 my $head = <TODOS>;
@@ -63,7 +61,7 @@ while (my $line1 = <POP>) {
     my %hash;
     $title = $title."\t".$pop;
  
-    open (IN, "Freq_haplotipo/M$num/M$num.$pop.freq.txt") or die "Não foi possível abrir o arquivo $pop! \n";
+    open (IN, "1000G_test/Freq_haplo/M$num/M$num.$pop.freq.txt") or die "Failed to open $pop file! \n";
     <IN>;
     my $tot2 = 0;
 	
@@ -96,7 +94,6 @@ while (my $line1 = <POP>) {
 }
 
 close (POP);
-#close (OUT);
 
 my $cont = 1;
 
@@ -118,4 +115,4 @@ foreach my $key1(sort keys %haplos) {
 }
 print OUT " \t$total\n";
 
-
+close (OUT);
