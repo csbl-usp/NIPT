@@ -69,13 +69,13 @@ It requires four inputs, the alleged father bam file, the mother bam file, the p
 Other parameters have default values, but can be changed. \
 \
 Required parameters: \
-	-h	Show the options \
 	-F	ALLEGED FATHER bam file \
 	-M	MOTHER bam file \
 	-P	PLASMA bam file \
 	-t	Trio number \
 \
 Other parameters: \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
 	-l	Use or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
