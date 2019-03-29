@@ -27,7 +27,7 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($trio && $amostra)) {die "\
-TThis script requires three inputs, the bam file, the trio number and the sample type. \
+TThis script requires two inputs, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The outputs are two files. \
 	BOM_MAP - contain the reads that have a mapping quality higher than the threshold. \ 
