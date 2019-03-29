@@ -5,15 +5,14 @@
 
 #SCRIPT TO EXTRACT THE READS QUALITY THAT PASSED THE QUALITY CONTROL
 
-#The script receives 8 parameters
-#1 - Bam file
-#2 - Mapping quality
-#3 - YesCIGAR or NotCIGAR
-#4 - Bases quality
-#5 - Percentage of covered bases
-#6 - Coverage of regions
-#7 - Sample type
-#8 - Trio number
+#The script receives 7 parameters
+#1 - Mapping quality
+#2 - YesCIGAR or NotCIGAR
+#3 - Bases quality
+#4 - Percentage of covered bases
+#5 - Coverage of regions
+#6 - Sample type
+#7 - Trio number
 
 #Inbalance parameters
 #1 - Superior
@@ -26,7 +25,6 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $map = 20;
 my $cigar = "NotCIGAR";
 my $qual = 20;
@@ -39,7 +37,6 @@ my $amostra;
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$qual,
@@ -52,13 +49,12 @@ GetOptions("help|h" => \$help,
 	   "t=s" => \$trio
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $amostra && $trio)) {die "\
-This script requires three inputs, the bam file, the trio number and the sample type. \
+if ($help || !($amostra && $trio)) {die "\
+This script requires two inputs, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The output is a REPORT with the number of reads thas passes each quality step.\
 \
 Required parameters: \
-	-b	Bam file \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father), M (mother) or P (plasma) \
 \
@@ -137,6 +133,7 @@ open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplot
 while (my $pos = <POS>) {
 
     chomp ($pos);
+ls
 
     open (HAPLO, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
 
