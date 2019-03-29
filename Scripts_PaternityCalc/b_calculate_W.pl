@@ -5,16 +5,15 @@
 
 #SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING THE FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#The script receives 9 parameters
-#1 - Plasma bam file
-#2 - Mapping quality
-#3 - YesCIGAR or NotCIGAR
-#4 - Bases quality
-#5 - Percentage of covered bases
-#6 - Coverage of alleged father and mother regions
-#7 - Coverage of plasma regions
-#8 - Population from 1000 Genomes
-#9 - Trio number
+#The script receives 8 parameters
+#1 - Mapping quality
+#2 - YesCIGAR or NotCIGAR
+#3 - Bases quality
+#4 - Percentage of covered bases
+#5- Coverage of alleged father and mother regions
+#6 - Coverage of plasma regions
+#7 - Population from 1000 Genomes
+#8 - Trio number
 
 #Inbalance parameters
 #1 - Superior
@@ -27,7 +26,6 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $cobPL = 1000;
 my $map = 20;
 my $cigar = "NotCIGAR";
@@ -41,7 +39,6 @@ my $Genome = "ALL";
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$qual,
@@ -55,8 +52,8 @@ GetOptions("help|h" => \$help,
 	   "t=s" => \$trio
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $trio)) {die "\
-This script requires three inputs, the bam file, the trio number and the sample type. \
+if ($help || !($trio)) {die "\
+This script requires one input, the trio number. \
 Other parameters have default values, but can be changed. \
 The outputs is the probability of paternity and a report. \
 \
