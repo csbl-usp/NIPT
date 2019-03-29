@@ -64,19 +64,24 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM && $amostra && $trio)) {die "\
-This script receives the parameters to analyze the sample data (alleged father, mother or plasma). \
+This script requires three inputs, the bam file, the trio number and the sample type. \
+Other parameters have default values, but can be changed. \
 The output are the sample genotypes and a quality report for the data. \
 \
-Parameters: \
-	-h	Show the options \
+Required parameters: \
 	-b	BAM file \
 	-t	Trio number \
+	-a	Type of sample AF (alleged father), M (mother) or P (plasma) \
+\
+Other parameters: \
+	-h	Show the options \
 	-m	Mapping quality of reads (default = 20) \
-	-l	YesCIGAR or NotCIGAR (default = NotCIGAR) \
+	-l	Uses or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
 	-p	Percentage of covered bases (default = 70) \
 	-c	Covered reads (default = 20) \
-	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
+\
+Inbalance parameters: \
 	-e	Limit for sequencing errors (default = 10) \
 	-s	Limit to consider HOMOZYGOUS (default = 80) \
 	-d	Limit to consider HETEROZYGOUS when there are more than 3 possibilities (default = 35) \
