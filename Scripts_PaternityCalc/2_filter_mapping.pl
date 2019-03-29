@@ -5,11 +5,10 @@
 
 #SCRIPT TO SEPARATE READ WITH GOOD MAPPING
 
-#The program receives 4 parameters:
-#1 - Bam file
-#2 - Mapping quality
-#3 - Trio number
-#4 - Sample type
+#The program receives 3 parameters:
+#1 - Mapping quality
+#2 - Trio number
+#3 - Sample type
 
 ####################################################################################
 
@@ -17,19 +16,17 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $qual = 20;
 my $amostra;
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$qual,
 	   "t=s" => \$trio,
 	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $trio && $amostra)) {die "\
+if ($help || !($trio && $amostra)) {die "\
 TThis script requires three inputs, the bam file, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The outputs are two files. \
@@ -37,7 +34,6 @@ The outputs are two files. \
 	MAU_MAP - contain the reads that have a mapping quality lower than the threshold. \
 \
 Required parameters: \
-	-b	Bam files \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 \
