@@ -5,11 +5,10 @@
 
 #SCRIPT TO SEPARATE READS THAT COVER ALL THE SNPS CONSIDERING ONLY (MIS)MATCHES IN THE CIGAR
 
-#The script receives 4 parameters
-#1 - Bam file
-#2 - Mapping quality
-#3 - Trio number
-#4 - Sample type
+#The script receives 3 parameters
+#1 - Mapping quality
+#2 - Trio number
+#3 - Sample type
 
 ####################################################################################
 
@@ -17,19 +16,17 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $map = 20;
 my $amostra;
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "t=s" => \$trio,
 	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $amostra && $trio)) {die "\
+if ($help || !($amostra && $trio)) {die "\
 This script requires three inputs, the bam file, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The outputs are three files. \
@@ -38,7 +35,6 @@ The outputs are three files. \
 	PARTE_SNPS - contain reads with PART of the SNPs covered. \
 \
 Required parameters: \
-	-b	Bam file \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \
 \
