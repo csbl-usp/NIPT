@@ -94,7 +94,7 @@ while (my $pos = <POS>){
 } #while (my $pos = <POS>)
 
 close (POS);
-system ("rm $nome*.bai");
+
 system ("mkdir $nome.MAU_ALN $nome.BOM_ALN");
 system ("mv $nome.*.MAU_ALN.tsv $nome.MAU_ALN");
 system ("mv $nome.*.BOM_ALN.tsv $nome.BOM_ALN");
