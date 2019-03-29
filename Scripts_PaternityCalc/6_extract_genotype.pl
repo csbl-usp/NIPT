@@ -5,15 +5,14 @@
 
 #SCRIPT TO EXTRACT THE GENOTYPES OF ALLEGED FATHER AND MOTHER FOR EACH MICROHAPLOTYPE
 
-#The script receives 8 parameters
-#1 - Bam file
-#2 - Mapping quality
-#3 - YesCIGAR or NotCIGAR
-#4 - Bases quality
-#5 - Percentage of covered bases
-#6 - Regions coverage
-#7 - Trio number
-#8 - Sample type
+#The script receives 7 parameters
+#1 - Mapping quality
+#2 - YesCIGAR or NotCIGAR
+#3 - Bases quality
+#4 - Percentage of covered bases
+#5 - Regions coverage
+#6 - Trio number
+#7 - Sample type
 
 #Inbalance parameters
 #1 - Superior
@@ -26,7 +25,6 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $map = 20;
 my $cigar = "NotCIGAR";
 my $qual = 20;
@@ -39,7 +37,6 @@ my $trio;
 my $amostra;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$qual,
@@ -52,13 +49,12 @@ GetOptions("help|h" => \$help,
 	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $trio && $amostra)) {die "\
-This script requires three inputs, the bam file, the trio number and the sample type. \
+if ($help || !($trio && $amostra)) {die "\
+This script requires two inputs, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The output is the genotype of each microhaplotype analyzed.\
 \
 Required parameters: \
-	-b	Bam file \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father) or M (mother) \
 \
