@@ -5,14 +5,13 @@
 
 #SCRIPT TO EXTRACT THE HAPLOTYPES FROM THE READS WITH GOOD MAPPING AND COVERING ALL THE SNPS WITHIN THE MICROHAPLOTYPE 
 
-#The script receives 7 parameters
-#1 - Bam file
-#2 - Mapping quality
-#3 - YesCIGAR or NotCIGAR
-#4 - Bases quality
-#5 - Percentage of covered bases
-#6 - Trio number
-#7 - Sample type
+#The script receives 6 parameters
+#1 - Mapping quality
+#2 - YesCIGAR or NotCIGAR
+#3 - Bases quality
+#4 - Percentage of covered bases
+#5 - Trio number
+#6 - Sample type
 
 ####################################################################################
 
@@ -20,7 +19,6 @@ use strict;
 use Getopt::Long;
 
 my $help = 0;
-my $BAM;
 my $map = 20;
 my $cigar = "NotCIGAR";
 my $score = 20;
@@ -29,7 +27,6 @@ my $trio;
 my $amostra;
 
 GetOptions("help|h" => \$help,
-	   "b=s" => \$BAM,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$score,
@@ -38,15 +35,14 @@ GetOptions("help|h" => \$help,
 	   "a=s" => \$amostra
     ) or die "Failed to take the options! \n";
 
-if ($help || !($BAM && $trio && $amostra)) {die "\
-This script requires three inputs, the bam file, the trio number and the sample type. \
+if ($help || !($trio && $amostra)) {die "\
+This script requires two inputs, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The outputs are two files. \
 	MORE_XX - contém os haplótipos com mais de XX% de bases cobertas. \
 	LESS_XX - contém os haplótipos com mais de XX% de bases cobertas. \ 
 \
 Required parameters: \
-	-b	Bam file \
 	-t	Trio number \
 	-a	Type of sample AF (alleged father), M (mother) ou P (plasma) \ 
 \
