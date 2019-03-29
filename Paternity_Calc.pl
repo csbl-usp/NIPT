@@ -47,9 +47,9 @@ my $Genome = "ALL";
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "X=s" => \$BAM_SP,
-	   "Y=s" => \$BAM_M,
-	   "Z=s" => \$BAM_P,
+	   "F=s" => \$BAM_SP,
+	   "M=s" => \$BAM_M,
+	   "P=s" => \$BAM_P,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$qual,
@@ -64,14 +64,18 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($BAM_SP && $BAM_M && $BAM_P && $trio)) {die "\
-This script is used to calculate the probability of paternity using three bam files (alleged father, mother and plasma). \
+This script is used to calculate the probability of paternity. \
+It requires four inputs, the alleged father bam file, the mother bam file, the plasma bam file and the trio number. \
+Other parameters have default values, but can be changed. \
 \
-Parameters: \
+Required parameters: \
 	-h	Show the options \
-	-S	ALLEGED FATHER bam file \
+	-F	ALLEGED FATHER bam file \
 	-M	MOTHER bam file \
 	-P	PLASMA bam file \
 	-t	Trio number \
+\
+Other parameters: \
 	-m	Mapping quality of reads (default = 20) \
 	-l	Use or not the CIGAR info. If NOT (NotCIGAR), consider only (mis)matches. Other option is YesCIGAR (default = NotCIGAR) \
 	-q	Bases quality (default = 20) \
