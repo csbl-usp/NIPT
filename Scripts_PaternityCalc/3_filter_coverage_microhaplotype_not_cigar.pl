@@ -27,7 +27,7 @@ GetOptions("help|h" => \$help,
     ) or die "Failed to take the options! \n";
 
 if ($help || !($amostra && $trio)) {die "\
-This script requires three inputs, the bam file, the trio number and the sample type. \
+This script requires two inputs, the trio number and the sample type. \
 Other parameters have default values, but can be changed. \
 The outputs are three files. \
 	CIGAR_RUIM - contain read where the CIGAR shows insertions, deletions, etc. \
