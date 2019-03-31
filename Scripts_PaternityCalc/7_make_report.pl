@@ -78,7 +78,7 @@ Inbalance parameters: \
 my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $num1 = 1;
 while (my $pos = <POS>) {
@@ -100,25 +100,25 @@ while (my $pos = <POS>) {
     my $ini = $2;
     my $fim = $3;
 
-    system("wc $nome/$nome.MAU_ALN/$nome.$chr.$ini-$fim.MAU_ALN.tsv > report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.MAU_ALN/$nome.$chr.$ini-$fim.MAU_ALN.tsv > report_$micro");
     
-    system("wc $nome/$nome.BOM_ALN/$nome.$chr.$ini-$fim.BOM_ALN.tsv >> report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.BOM_ALN/$nome.$chr.$ini-$fim.BOM_ALN.tsv >> report_$micro");
     
-    system("wc $nome/$nome.MAU_MAP.M$map/$nome.$chr.$ini-$fim.MAU_MAP.M$map.tsv >> report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.MAU_MAP.M$map/$nome.$chr.$ini-$fim.MAU_MAP.M$map.tsv >> report_$micro");
     
-    system("wc $nome/$nome.BOM_MAP.M$map/$nome.$chr.$ini-$fim.BOM_MAP.M$map.tsv >> report_$micro"); 
+    system("wc BAM/Trio$trio/$nome/$nome.BOM_MAP.M$map/$nome.$chr.$ini-$fim.BOM_MAP.M$map.tsv >> report_$micro"); 
 
     if ($cigar eq "NotCIGAR") {
-	system("wc $nome/$nome.CIGAR_RUIM.M$map.$cigar/$nome.$chr.$ini-$fim.CIGAR_RUIM.M$map.$cigar.tsv >> report_$micro");
+	system("wc BAM/Trio$trio/$nome/$nome.CIGAR_RUIM.M$map.$cigar/$nome.$chr.$ini-$fim.CIGAR_RUIM.M$map.$cigar.tsv >> report_$micro");
     }
     
-    system("wc $nome/$nome.PARTE_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.$cigar.tsv >> report_$micro");    
+    system("wc BAM/Trio$trio/$nome/$nome.PARTE_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.PARTE_SNPS.M$map.$cigar.tsv >> report_$micro");    
 
-    system("wc $nome/$nome.TODOS_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.$cigar.tsv >> report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.TODOS_SNPS.M$map.$cigar/$nome.$chr.$ini-$fim.TODOS_SNPS.M$map.$cigar.tsv >> report_$micro");
 
-    system("wc $nome/$nome.LESS_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.LESS_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.LESS_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.LESS_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
 
-    system("wc $nome/$nome.MORE_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.MORE_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
+    system("wc BAM/Trio$trio/$nome/$nome.MORE_$por.Q$qual.M$map.$cigar/$nome.$chr.$ini-$fim.MORE_$por.Q$qual.M$map.$cigar.tsv >> report_$micro");
 
     $num1 += 1;
 
@@ -128,14 +128,12 @@ close (POS);
 
 
 my @PAIRING;
-open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 while (my $pos = <POS>) {
 
     chomp ($pos);
-ls
-
-    open (HAPLO, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
+    open (HAPLO, "BAM/Trio$trio/$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
 
     while (my $line1 = <HAPLO>) {
 	chomp ($line1);
@@ -279,13 +277,13 @@ my @GENOTYPE;
 
 if (($amostra eq "M") || ($amostra eq "SP")) {
 
-    open (POS, "Files/microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
+    open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
     while (my $pos = <POS>) {
 
 	chomp ($pos);
 
-	open (GENO, "Genotypes_$amostra.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open GENOTYPES files! \n";
+	open (GENO, "Genotypes_$nome.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open GENOTYPES files! \n";
 	$/ = "\n\n";
 	
 	while (my $line1 = <GENO>) {
