@@ -78,7 +78,7 @@ Inbalance parameters:
 my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "Files/microhaplotipos.txt") or die "Failed to obtain the microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to obtain the microhaplotypes! \n";
 
 my $inferior = 100 - $superior;
 
@@ -93,19 +93,22 @@ while (my $pos = <POS>) {
     my $fim = $3;
     
     #Abrimos o arquivo de entrada com as porcentagens relativas dos haplótipos
-    open (INFILE, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open the HAPLOTYPES file! \n";
+    open (INFILE, "BAM/Trio$trio/$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open the HAPLOTYPES file! \n";
     
     my %cobertura;
     my %porcentagem;
     
     while (my $line1 = <INFILE>) {
-
+    
+    	next unless $line1 !~ m/^\n/;
 	chomp ($line1);
 	my @dados = split(/\t/, $line1);
 
 	if ($pos eq $dados[0]) {
-	    $porcentagem{$dados[1]} = $dados[3];
-	    $cobertura{$dados[1]} = $dados[2];
+	    if ($dados[1] ne "Discard") {
+		$porcentagem{$dados[1]} = $dados[3];
+		$cobertura{$dados[1]} = $dados[2];
+	    }
 	}
     }
     
