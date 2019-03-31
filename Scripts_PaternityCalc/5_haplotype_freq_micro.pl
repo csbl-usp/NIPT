@@ -55,10 +55,10 @@ Other parameters: \
 
 ####################################################################################
 
-my $nome = "Trio$trio"."_Sample_$amostra";
+my $nome = "Trio$trio"."_Sample$amostra";
 
 #Armazenamos os cromossomos e intervalos escolhidos como micro-haplótipos
-open (POS, "Files/microhaplotipos.txt") or die "Failed to open file with microhaplotypes! \n";
+open (POS, "Files/Microhaplotypes.txt") or die "Failed to open file with microhaplotypes! \n";
 
 #Abrimos o arquivo de saída dos haplótipos encontrados em cada micro-haplótipo
 open (OUT, ">$nome.haplotipos.MORE_$por.Q$score.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
