@@ -114,7 +114,7 @@ while (my $pos = <POS>) {
     
     while (my $line1 = <INFILE>) {
 	chomp ($line1);
-	next unless $line1 =~ m/^pos/;
+	next unless $line1 =~ m/^$pos/;
 	next unless $line1 !~ m/Discard/;
 	my @dados = split(/\t/, $line1);
 
