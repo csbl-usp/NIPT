@@ -47,9 +47,9 @@ my $Genome = "ALL";
 my $trio;
 
 GetOptions("help|h" => \$help,
-	   "F=s" => \$BAM_SP,
-	   "M=s" => \$BAM_M,
-	   "P=s" => \$BAM_P,
+	   "X=s" => \$BAM_SP,
+	   "Y=s" => \$BAM_M,
+	   "Z=s" => \$BAM_P,
 	   "m=s" => \$map,
 	   "l=s" => \$cigar,
 	   "q=s" => \$qual,
@@ -69,9 +69,9 @@ It requires four inputs, the alleged father bam file, the mother bam file, the p
 Other parameters have default values, but can be changed. \
 \
 Required parameters: \
-	-F	ALLEGED FATHER bam file \
-	-M	MOTHER bam file \
-	-P	PLASMA bam file \
+	-X	ALLEGED FATHER bam file \
+	-Y	MOTHER bam file \
+	-Z	PLASMA bam file \
 	-t	Trio number \
 \
 Other parameters: \
@@ -103,4 +103,4 @@ system("Scripts_PaternityCalc/a_analyze_sample.pl -t $trio -b $BAM_M -m $map -l 
 system("Scripts_PaternityCalc/a_analyze_sample.pl -t $trio -b $BAM_P -m $map -l $cigar -q $qual -p $por -c $cob -a P -e $erros -s $superior -d $duvida");
 
 #PROBABILITY OF PATERNITY calculation
-system("Scripts_PaternityCalc/b_calculate_W.pl -t $trio -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
+system("Scripts_PaternityCalc/b_calculate_W.pl -t $trio -m $map -l $cigar -q $qual -p $por -c $cob -f $cobPL -g $Genome -e $erros -s $superior -d $duvida > Paternity_Calc.Trio$trio.M$map.$cigar.Q$qual.P$por.C$cob.CP$cobPL.$Genome.E$erros.S$superior.D$duvida.txt");
