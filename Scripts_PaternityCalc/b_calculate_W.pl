@@ -58,7 +58,6 @@ Other parameters have default values, but can be changed. \
 The outputs is the probability of paternity and a report. \
 \
 Required parameters:\
-	-b	Plasma bam file \
 	-t	Trio number \
 \
 Other parameters: \
@@ -80,7 +79,9 @@ Inbalance parameters: \
 
 ####################################################################################
 
-my $nome = "Trio$trio"."_SampleP";
+my $nomeAF = "Trio$trio"."_SampleAF";
+my $nomeM = "Trio$trio"."_SampleM";
+my $nomeP = "Trio$trio"."_SampleP";
 
 my $IPC = 1;
 my $conta_m = 0;
@@ -105,7 +106,7 @@ while (my $pos = <POS>) {
     
     ###################################################################################
     #Abrimos os arquivos de qualidade dos haplotipos e armazenamos as informacoes de cobertura e porcentagem de cada haplotipo encontrado
-    open (INFILE, "$nome/$nome.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
+    open (INFILE, "BAM/Trio$trio/$nomeP/$nomeP.haplotipos.MORE_$por.Q$qual.M$map.$cigar.tsv") or die "Failed to open HAPLOTYPES file! \n";
     
     my %cobertura;
     my %porcentagem;
@@ -113,6 +114,8 @@ while (my $pos = <POS>) {
     
     while (my $line1 = <INFILE>) {
 	chomp ($line1);
+	next unless $line1 =~ m/^pos/;
+	next unless $line1 !~ m/Discard/;
 	my @dados = split(/\t/, $line1);
 
 	if ($pos eq $dados[0]) {
@@ -125,7 +128,7 @@ while (my $pos = <POS>) {
 
     ####################################################################################
     #Buscamos os haplotipos do pai no arquivo do PAI
-    open (PAI, "Genotypes_AF.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
+    open (PAI, "Genotypes_$nomeAF.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the AF GENOTYPES file!\n";
     $/ = "\n\n";
     my %haplo_pai;
     
@@ -136,7 +139,7 @@ while (my $pos = <POS>) {
 	    my @array = split(/\n/, $line2);
 	    
 	    foreach my $key(@array) {
-		if ($key =~ m/[ATCG]+/g) {
+		if ($key =~ m/^[ATCG]+/g) {
 		    my ($haplo, $porce, $cober) = split(/\t/, $key);
 		    $haplo_pai{$haplo} = $porce."\t".$cober;
 		}
@@ -147,7 +150,7 @@ while (my $pos = <POS>) {
 
     ####################################################################################
     #Buscamos os haplotipos da mae no arquivo da MAE
-    open (MAE, "Genotypes_M.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the M GENOTYPES file! \n";
+    open (MAE, "Genotypes_$nomeM.M$map.$cigar.Q$qual.P$por.C$cob.E$erros.S$superior.D$duvida.txt") or die "Failed to open the M GENOTYPES file! \n";
     my %haplo_mae;
     
     while (my $line3 = <MAE>) {
@@ -158,7 +161,7 @@ while (my $pos = <POS>) {
 	    
 	    foreach my $key(@array) {
 
-		if ($key =~ m/[ATCG]+/g) {
+		if ($key =~ m/^[ATCG]+/g) {
 		    my ($haplo, $porce, $cober) = split(/\t/, $key);
 		    $haplo_mae{$haplo} = $porce."\t".$cober;
 		}
@@ -423,7 +426,7 @@ while (my $pos = <POS>) {
 			#print "A = $a\n";
 			#print "B = $b\n";
 			
-			print "Case M=AB, C=AB, SP=AC ou M=AB, C=A, SP=AC\n";
+			print "Case M=AB, C=AB, AF=AC ou M=AB, C=A, AF=AC\n";
 
 			my $IP1 = (1/(2*$a));
 			my $IP2 = (1/(2*($a + $b)));
@@ -455,7 +458,7 @@ while (my $pos = <POS>) {
 			#print "A = $a\n";
 			#print "B = $b\n";
 			
-			print "Case M=AB, C=AB, SP=AB ou M=AB, C=A, SP=AB\n";
+			print "Case M=AB, C=AB, AF=AB ou M=AB, C=A, AF=AB\n";
 
 			if ($a < $b) {
 			    $IP += (1/(2*$b));
@@ -495,7 +498,7 @@ while (my $pos = <POS>) {
 		    #print "B = $b\n";
 		    
 		    if ($count1 == 1) {
-			print "Case M=AB, C=AB, SP=A ou M=AB, C=A, SP=A\n";
+			print "Case M=AB, C=AB, AF=A ou M=AB, C=A, AF=A\n";
 
 			my $IP1 = (1/($a));
 			my $IP2 = (1/($a + $b));
@@ -521,7 +524,7 @@ while (my $pos = <POS>) {
 		    #print "A = $a\n";
 		    
 		    if ($count1 == 1) {
-			print "Case M=A, C=A, SP=AB\n";
+			print "Case M=A, C=A, AF=AB\n";
 			$IP += (1/(2*$a));
 		    }		    
 		}
@@ -537,7 +540,7 @@ while (my $pos = <POS>) {
 		    #print "A = $a\n";
 		    
 		    if ($count1 == 1) {
-			print "Case M=A, C=A, SP=A\n";
+			print "Case M=A, C=A, AF=A\n";
 			$IP += (1/$a);
 		    }
 		}
@@ -564,33 +567,33 @@ while (my $pos = <POS>) {
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Case M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
+			print "Case M=BC, C=AB, AF=AC ou M=BC, C=AB, AF=AB\n";
 			$IP += (1/(2*$a));
 		    }
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 2)) {
 		    if ($count1 == 0) {
-			print "Case M=BC, C=AB, SP=A\n";
+			print "Case M=BC, C=AB, AF=A\n";
 			$IP += (1/$a);
 		    }
 		}
 
 		elsif (($n_h_pai == 2) && ($n_h_mae == 1)) {
 		    if ($count1 == 0) {
-			print "Case M=B, C=AB, SP=AC\n";
+			print "Case M=B, C=AB, AF=AC\n";
 			$IP += (1/(2*$a));
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Case M=B, C=AB, SP=AB\n";
+			print "Case M=B, C=AB, AF=AB\n";
 			$IP += (1/(2*$a));
 		    }
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 1)) {
 		    if ($count1 == 0) {
-			print "Case M=B, C=AB, SP=A\n";
+			print "Case M=B, C=AB, AF=A\n";
 			$IP += (1/$a);
 		    }
 		}
@@ -616,38 +619,38 @@ while (my $pos = <POS>) {
 		#print "A = $a\n";
 		if (($n_h_pai == 2) && ($n_h_mae == 2)) {
 		    if ($count1 == 0) {
-			print "Case M=BD, C=AB, SP=AC\n";
+			print "Case M=BD, C=AB, AF=AC\n";
 			$IP += (1/(2*$a));
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Case M=BC, C=AB, SP=AC ou M=BC, C=AB, SP=AB\n";
+			print "Case M=BC, C=AB, AF=AC ou M=BC, C=AB, AF=AB\n";
 			$IP += (1/(2*$a));
 		    }
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 2)) {
 		    if ($count1 == 0) {
-			print "Case M=BC, C=AB, SP=A\n";
+			print "Case M=BC, C=AB, AF=A\n";
 			$IP += (1/$a);
 		    }
 		}
 
 		elsif (($n_h_pai == 2) && ($n_h_mae == 1)) {
 		    if ($count1 == 0) {
-			print "Case M=B, C=AB, SP=AC\n";
+			print "Case M=B, C=AB, AF=AC\n";
 			$IP += (1/(2*$a));
 		    }
 
 		    elsif ($count1 == 1) {
-			print "Case M=B, C=AB, SP=AB\n";
+			print "Case M=B, C=AB, AF=AB\n";
 			$IP += (1/(2*$a));
 		    }
 		}
 
 		elsif (($n_h_pai == 1) && ($n_h_mae == 1)) {
 		    if ($count1 == 0) {
-			print "Case M=B, C=AB, SP=A\n";
+			print "Case M=B, C=AB, AF=A\n";
 			$IP += (1/$a);
 		    }
 		}
