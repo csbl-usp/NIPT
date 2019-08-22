@@ -1,23 +1,23 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO EXTRACT THE GENOTYPES OF ALLEGED FATHER AND MOTHER FOR EACH MICROHAPLOTYPE
+# SCRIPT TO EXTRACT THE GENOTYPES OF ALLEGED FATHER AND MOTHER FOR EACH MICROHAPLOTYPE
 
-#The script receives 7 parameters
-#1 - Mapping quality
-#2 - YesCIGAR or NotCIGAR
-#3 - Bases quality
-#4 - Percentage of covered bases
-#5 - Regions coverage
-#6 - Trio number
-#7 - Sample type
+# The script receives 7 parameters
+# 1 - Mapping quality
+# 2 - YesCIGAR or NotCIGAR
+# 3 - Bases quality
+# 4 - Percentage of covered bases
+# 5 - Regions coverage
+# 6 - Trio number
+# 7 - Sample type
 
-#Inbalance parameters
-#1 - Superior
-#2 - Errors
-#3 - Doubt between three
+# Inbalance parameters
+# 1 - Superior
+# 2 - Errors
+# 3 - Doubt between three
 
 ####################################################################################
 
