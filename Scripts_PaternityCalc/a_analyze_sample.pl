@@ -1,35 +1,35 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO EXTRACT THE ALLEGED FATHER AND MOTHER GENOTYPES AND OBTAIN THE PLASMA HAPLOTYPES.
+# SCRIPT TO EXTRACT THE ALLEGED FATHER AND MOTHER GENOTYPES AND OBTAIN THE PLASMA HAPLOTYPES.
 
-#It uses the following scripts:
-#1_filter_alignment.pl                         
-#2_filter_mapping.pl               
-#3_filter_coverage_microhaplotype_yes_cigar.pl
-#3_filter_coberage_microhaplotype_not_cigar.pl
-#4_filter_base_quality.pl           
-#5_haplotype_freq_micro.pl             
-#6_extract_genotype.pl
-#7_make_report.pl
+# It uses the following scripts:
+# 1_filter_alignment.pl                         
+# 2_filter_mapping.pl               
+# 3_filter_coverage_microhaplotype_yes_cigar.pl
+# 3_filter_coberage_microhaplotype_not_cigar.pl
+# 4_filter_base_quality.pl           
+# 5_haplotype_freq_micro.pl             
+# 6_extract_genotype.pl
+# 7_make_report.pl
 
 
-#The program requires 8 parameters:
-#1 - Bam file
-#2 - Mapping quality
-#3 - YesCIGAR ou NotCIGAR
-#4 - Bases quality
-#5 - Percentage of covered bases
-#6 - Coverage of regions
-#7 - Sample type
-#8 - Trio number
+# The program requires 8 parameters:
+# 1 - Bam file
+# 2 - Mapping quality
+# 3 - YesCIGAR ou NotCIGAR
+# 4 - Bases quality
+# 5 - Percentage of covered bases
+# 6 - Coverage of regions
+# 7 - Sample type
+# 8 - Trio number
 
-#Inbalance parameters
-#1 - Superior
-#2 - Errors
-#3 - Doubt between three
+# Inbalance parameters
+# 1 - Superior
+# 2 - Errors
+# 3 - Doubt between three
 
 ####################################################################################
 
