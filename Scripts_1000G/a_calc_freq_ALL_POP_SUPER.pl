@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO CREATE FILES FOR EACH POPULATION AND SUPER-POPULATION
+# SCRIPT TO CREATE FILES FOR EACH POPULATION AND SUPER-POPULATION
 
-#The script requires 3 parameters
-#1 - Vcf file
-#2 - List of SNPs that compose the microhaplotype
-#3 - Microhaplotype number
+# The script requires 3 parameters
+# 1 - Vcf file
+# 2 - List of SNPs that compose the microhaplotype
+# 3 - Microhaplotype number
 
 ####################################################################################
 
