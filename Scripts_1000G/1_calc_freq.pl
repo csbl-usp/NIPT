@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO CALCULATE THE MICROHAPLOTYPE FREQUENCIES FROM 1000 GENOMES 
+# SCRIPT TO CALCULATE THE MICROHAPLOTYPE FREQUENCIES FROM 1000 GENOMES 
 
-#The script requires 3 parameters
-#1 - Vcf file
-#2 - List of SNPs that compose the microhaplotype
-#3 - Population or super population initial or ALL
+# The script requires 3 parameters
+# 1 - Vcf file
+# 2 - List of SNPs that compose the microhaplotype
+# 3 - Population or super population initial or ALL
 
 ####################################################################################
 
