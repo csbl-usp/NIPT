@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO CREATE A META FILE OF HAPLOTYPES FREQUENCIES FROM 1000 GENOMES.
+# SCRIPT TO CREATE A META FILE OF HAPLOTYPES FREQUENCIES FROM 1000 GENOMES.
 
-#The script requires 3 parameters
-#1 - Vcf file
-#2 - List of SNPs that compose the microhaplotype
-#3 - Microhaplotype number
+# The script requires 3 parameters
+# 1 - Vcf file
+# 2 - List of SNPs that compose the microhaplotype
+# 3 - Microhaplotype number
 
 ####################################################################################
 
