@@ -1,9 +1,9 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO CREATE THE META FILE WITH ALL THE POPULATIONS
+# SCRIPT TO CREATE THE META FILE WITH ALL THE POPULATIONS
 
 use strict;
 use Getopt::Long;
@@ -32,10 +32,10 @@ open (POP, "Files/pop_list.txt") or die "Failed to open POP_LIST file! \n";
 
 open (OUT, ">M$num.meta_file.txt") or die "Failed to open META FILE! \n";
 
-#Eliminamos a linha do TODOS!
+# Eliminate the line TODOS!
 <POP>;
 
-#Abrimos o arquivo TODOS porque ele contém todos os haplótipos
+# Open the file TODOS because it contains all the haplotypes
 open (TODOS, "1000G_test/Freq_haplo/M$num/M$num.ALL.freq.txt") or die "Failed o open ALL file! \n";
 
 my $head = <TODOS>;
