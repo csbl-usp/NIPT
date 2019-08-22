@@ -1,17 +1,17 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO EXTRACT THE HAPLOTYPES FROM THE READS WITH GOOD MAPPING AND COVERING ALL THE SNPS WITHIN THE MICROHAPLOTYPE 
+# SCRIPT TO EXTRACT THE HAPLOTYPES FROM THE READS WITH GOOD MAPPING AND COVERING ALL THE SNPS WITHIN THE MICROHAPLOTYPE 
 
-#The script receives 6 parameters
-#1 - Mapping quality
-#2 - YesCIGAR or NotCIGAR
-#3 - Bases quality
-#4 - Percentage of covered bases
-#5 - Trio number
-#6 - Sample type
+# The script receives 6 parameters
+# 1 - Mapping quality
+# 2 - YesCIGAR or NotCIGAR
+# 3 - Bases quality
+# 4 - Percentage of covered bases
+# 5 - Trio number
+# 6 - Sample type
 
 ####################################################################################
 
