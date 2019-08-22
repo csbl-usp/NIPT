@@ -1,17 +1,17 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO SEPARATE READS THAT HAD PASSED THE ALIGNMENT, MAPPING, BASE QUALITY, SNPS COVERAGE AND PERCENTAGE OF COVERED SNPS.
+# SCRIPT TO SEPARATE READS THAT HAD PASSED THE ALIGNMENT, MAPPING, BASE QUALITY, SNPS COVERAGE AND PERCENTAGE OF COVERED SNPS.
 
-#This script receives 6 parameters
-#1 - Mapping quality
-#2 - YesCIGAR or NotCIGAR
-#3 - Bases quality
-#4 - Percentage of covered bases
-#5 - Trio number
-#6 - Sample type
+# This script receives 6 parameters
+# 1 - Mapping quality
+# 2 - YesCIGAR or NotCIGAR
+# 3 - Bases quality
+# 4 - Percentage of covered bases
+# 5 - Trio number
+# 6 - Sample type
 
 ####################################################################################
 
