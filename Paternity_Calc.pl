@@ -1,29 +1,29 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING BAM FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
+# SCRIPT TO CALCULATE THE PROBABILITY OF PATERNITY USING BAM FILES FROM ALLEGED FATHER, MOTHER AND PLASMA.
 
-#The program requires 3 bam files
-#S = Alleged father
-#M = Mother
-#P = Plasma
+# The program requires 3 bam files
+# S = Alleged father
+# M = Mother
+# P = Plasma
 
-#The program requires 8 parameters
-#1 - Mapping quality
-#2 - YesCIGAR ou NotCIGAR
-#3 - Bases quality
-#4 - Percentage of covered bases
-#5 - Coverage of regions in alleged father and mother
-#6 - Coverage of regions in plasma
-#7 - 1000G population
-#8 - Trio number
+# The program requires 8 parameters
+# 1 - Mapping quality
+# 2 - YesCIGAR ou NotCIGAR
+# 3 - Bases quality
+# 4 - Percentage of covered bases
+# 5 - Coverage of regions in alleged father and mother
+# 6 - Coverage of regions in plasma
+# 7 - 1000G population
+# 8 - Trio number
 
-#Inbalance parameters
-#1 - Superior
-#2 - Errors
-#3 - Doubt between three
+# Inbalance parameters
+# 1 - Superior
+# 2 - Errors
+# 3 - Doubt between three
 
 ####################################################################################
 
