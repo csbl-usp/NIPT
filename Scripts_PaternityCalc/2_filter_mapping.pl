@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO SEPARATE READ WITH GOOD MAPPING
+# SCRIPT TO SEPARATE READ WITH GOOD MAPPING
 
-#The program receives 3 parameters:
-#1 - Mapping quality
-#2 - Trio number
-#3 - Sample type
+# The program receives 3 parameters:
+# 1 - Mapping quality
+# 2 - Trio number
+# 3 - Sample type
 
 ####################################################################################
 
