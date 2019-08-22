@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO SEPARATE READS THAT COVER ALL THE SNPS CONSIDERING THE CIGAR
+# SCRIPT TO SEPARATE READS THAT COVER ALL THE SNPS CONSIDERING THE CIGAR
 
-#The script receives 3 parameters
-#1 - Mapping quality
-#2 - Trio number
-#3 - Sample type
+# The script receives 3 parameters
+# 1 - Mapping quality
+# 2 - Trio number
+# 3 - Sample type
 
 ####################################################################################
 
