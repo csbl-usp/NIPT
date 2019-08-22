@@ -1,14 +1,14 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO SEPARATE READ WITH A GOOD ALIGNMENT 
+# SCRIPT TO SEPARATE READ WITH A GOOD ALIGNMENT 
 
-#The program receives 3 parmeters:
-#1 - Bam file
-#2 - Trio Number
-#3 - Sample type
+# The program receives 3 parmeters:
+# 1 - Bam file
+# 2 - Trio Number
+# 3 - Sample type
 
 ####################################################################################
 
