@@ -1,23 +1,23 @@
 #!/usr/bin/perl -w
 
-#Author: Jaqueline Wang
-#MsC in Bioinformatics Graduate Program - USP
+# Author: Jaqueline Wang
+# MsC in Bioinformatics Graduate Program - USP
 
-#SCRIPT TO EXTRACT THE READS QUALITY THAT PASSED THE QUALITY CONTROL
+# SCRIPT TO EXTRACT THE READS QUALITY THAT PASSED THE QUALITY CONTROL
 
-#The script receives 7 parameters
-#1 - Mapping quality
-#2 - YesCIGAR or NotCIGAR
-#3 - Bases quality
-#4 - Percentage of covered bases
-#5 - Coverage of regions
-#6 - Sample type
-#7 - Trio number
+# The script receives 7 parameters
+# 1 - Mapping quality
+# 2 - YesCIGAR or NotCIGAR
+# 3 - Bases quality
+# 4 - Percentage of covered bases
+# 5 - Coverage of regions
+# 6 - Sample type
+# 7 - Trio number
 
-#Inbalance parameters
-#1 - Superior
-#2 - Errors
-#3 - Doubt between three
+# Inbalance parameters
+# 1 - Superior
+# 2 - Errors
+# 3 - Doubt between three
 
 ####################################################################################
 
